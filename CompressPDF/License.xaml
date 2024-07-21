@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CompressPDF"
         mc:Ignorable="d"
         Title="Licence"
-        Height="330" Width="500"
+        Height="350" Width="500"
         WindowStyle="None"
         ResizeMode="NoResize"
         Background="White"
@@ -29,7 +29,7 @@
                             HorizontalAlignment="Left"
                             VerticalAlignment="Top">
                     <TextBlock TextWrapping="Wrap" FontSize="10">
-                                <Run Text="Copyright 2024 ImageMagick Studio LLC"/>
+                                <Run Text="Copyright © 1999 ImageMagick Studio LLC"/>
                                 <LineBreak/>
                                 <LineBreak/>
                                 <Run Text="Licensed under the ImageMagick License (the 'License'); you may not use this file except in compliance with the License.  You may obtain a copy of the License at"/>
@@ -43,7 +43,7 @@
                     </TextBlock>
 
                     <TextBlock TextWrapping="Wrap" FontSize="10" Margin="0,20,0,0">
-                               <Run Text="Copyright 2024 Artifex Software Inc."/>
+                               <Run Text="Copyright © 2023 Artifex Software Inc."/>
                                <LineBreak/>
                                <LineBreak/>
                                <Run Text="This software includes features that are derived from Ghostscript software, under the AGPL license. For the full license text, please see:"/>
@@ -55,11 +55,13 @@
                     </TextBlock>
 
                     <TextBlock TextWrapping="Wrap" FontSize="10" Margin="0,20,0,0">
+                               <Run Text="Copyright © 2024 Ing. Petr Grebeníček"/>
+                               <LineBreak/>
                                <Run Text="In compliance with the AGPL license, the source code of this application is available at:"/>
                                <LineBreak/>
-                                <Hyperlink NavigateUri="https://github.com/PetrGrebenicek/CompressPDF" RequestNavigate="Hyperlink_RequestNavigate">
-                                <Run Text="https://github.com/PetrGrebenicek/CompressPDF"/>
-                                </Hyperlink>
+                               <Hyperlink NavigateUri="https://github.com/PetrGrebenicek/CompressPDF" RequestNavigate="Hyperlink_RequestNavigate">
+                               <Run Text="https://github.com/PetrGrebenicek/CompressPDF"/>
+                               </Hyperlink>
                     </TextBlock>
                 </StackPanel>
             </Grid>
