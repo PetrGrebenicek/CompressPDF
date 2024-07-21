@@ -34,7 +34,7 @@
                                 <LineBreak/>
                                 <Run Text="Licensed under the ImageMagick License (the 'License'); you may not use this file except in compliance with the License.  You may obtain a copy of the License at"/>
                                 <LineBreak/>
-                                <Hyperlink NavigateUri="https://imagemagick.org/script/license.php">
+                                <Hyperlink NavigateUri="https://imagemagick.org/script/license.php" RequestNavigate="Hyperlink_RequestNavigate">
                                 <Run Text="https://imagemagick.org/script/license.php"/>
                                 </Hyperlink>
                                 <LineBreak/>
@@ -48,8 +48,8 @@
                                <LineBreak/>
                                <Run Text="This software includes features that are derived from Ghostscript software, under the AGPL license. For the full license text, please see:"/>
                                <LineBreak/>
-                               <Hyperlink NavigateUri="https://www.ghostscript.com/license/agpl-license.html">
-                               <Run Text="https://www.ghostscript.com/license/agpl-license.html"/>
+                               <Hyperlink NavigateUri="https://www.ghostscript.com/licensing/index.html#open-source" RequestNavigate="Hyperlink_RequestNavigate">
+                               <Run Text="https://www.ghostscript.com/licensing/index.html#open-source"/>
                                </Hyperlink>
                                <LineBreak/>
                     </TextBlock>
@@ -57,9 +57,9 @@
                     <TextBlock TextWrapping="Wrap" FontSize="10" Margin="0,20,0,0">
                                <Run Text="In compliance with the AGPL license, the source code of this application is available at:"/>
                                <LineBreak/>
-                               <Hyperlink NavigateUri="https://github.com/PetrGrebenicek/CompressPDF">
-                               <Run Text="https://github.com/PetrGrebenicek/CompressPDF"/>
-                               </Hyperlink>
+                                <Hyperlink NavigateUri="https://github.com/PetrGrebenicek/CompressPDF" RequestNavigate="Hyperlink_RequestNavigate">
+                                <Run Text="https://github.com/PetrGrebenicek/CompressPDF"/>
+                                </Hyperlink>
                     </TextBlock>
                 </StackPanel>
             </Grid>
