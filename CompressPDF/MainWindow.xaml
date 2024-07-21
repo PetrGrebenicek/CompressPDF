@@ -24,14 +24,31 @@
             <Border BorderBrush="LightGray"
                     BorderThickness="0,0,0,1"
                     >
-            <DockPanel>
-                <CheckBox x:Name="CbGrayscale"
+                <DockPanel>
+                    <CheckBox x:Name="CbGrayscale"
                  IsChecked="True"
                  Margin="5"/>
-                <Label Content="Černobíle"/>
-            </DockPanel>
+                    <Label Content="Černobíle"/>
+                    <Button x:Name="BtnAbout"
+                            IsTabStop="False"
+                            Background="White"
+                            Width="100"
+                            Content="Licence"
+                            HorizontalAlignment="Right"
+                            Click="BtnAbout_Click"
+                            Margin="5">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                    <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </DockPanel>
             </Border>
         </Grid>
+        
         <Grid Grid.Row="1">
             <ListView x:Name="ListViewPDF" BorderThickness="0" 
             ScrollViewer.HorizontalScrollBarVisibility="Disabled">

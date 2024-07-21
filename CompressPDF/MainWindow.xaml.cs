@@ -1,11 +1,6 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Windows;
-using System.Windows.Input;
-using System.Windows.Interop;
-using System.Windows.Controls;
 
 namespace CompressPDF
 {
@@ -233,9 +228,7 @@ namespace CompressPDF
                 CbGrayscale.IsEnabled = true;
             }
         }
-        #endregion
-
-        
+        #endregion       
 
         #region File Compression of PDF
         private async Task CompressPdf(string file, string inputFileName, long inputFileSizeBytes, string outputFileNameWithPath)
@@ -413,6 +406,20 @@ namespace CompressPDF
                 // If the file size is less than 1024KB, format the string in KB
                 return kilobytes + " KB";
             }
+        }
+
+        #endregion
+
+        #region Licensing
+        private void BtnAbout_Click(object sender, RoutedEventArgs e)
+        {
+            License licenseWindow = new License();
+            licenseWindow.Owner = Application.Current.MainWindow;
+
+            licenseWindow.Left = Application.Current.MainWindow.Left + (Application.Current.MainWindow.Width - licenseWindow.Width) / 2;
+            licenseWindow.Top = Application.Current.MainWindow.Top + (Application.Current.MainWindow.Height - licenseWindow.Height) / 2;
+
+            licenseWindow.ShowDialog();
         }
         #endregion
     }
