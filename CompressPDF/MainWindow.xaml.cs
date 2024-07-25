@@ -118,6 +118,20 @@ namespace CompressPDF
                 }
             }
 
+            private string fileStatusReportPDF;
+            public string FileStatusReportPDF
+            {
+                get { return fileStatusReportPDF; }
+                set
+                {
+                    if (fileStatusReportPDF != value)
+                    {
+                        fileStatusReportPDF = value;
+                        OnPropertyChanged(nameof(FileStatusReportPDF));
+                    }
+                }
+            }
+
             public event PropertyChangedEventHandler PropertyChanged;
 
             protected void OnPropertyChanged(string propertyName)
@@ -159,7 +173,9 @@ namespace CompressPDF
         #region total amount variables
         int totalAmountOfFiles = 0;
         int totalAmountOfProcesseFiles = 0;
-        int totalAmountOfIgnoredFiles = 0;
+        int totalAmountOfIgnoredFilesDueToSize = 0;
+        int totalAmountOfIgnoredFilesDueToErrors = 0;
+        int totalAmountOfIgnoredFilesDueToType = 0;
         long totalInputFileSizeBytes = 0;
         long totalOutFileSizeBytes = 0;
         #endregion
@@ -259,18 +275,18 @@ namespace CompressPDF
                 {
                     await Task.Delay(100);
                     File.Copy(file, outputFileNameWithPath, true);
-                    totalAmountOfIgnoredFiles++;
+                    totalAmountOfIgnoredFilesDueToSize++;
                     await Task.Delay(100);
-                    GetOutputFileCompressionStatusToList(inputFileName, inputFileSizeBytes, outputFileNameWithPath);
+                    GetOutputFileCompressionStatusToList(inputFileName, inputFileSizeBytes, outputFileNameWithPath, "velikosti");
                 }
                 else
                 {
-                    GetOutputFileCompressionStatusToList(inputFileName, inputFileSizeBytes, outputFileNameWithPath);
+                    GetOutputFileCompressionStatusToList(inputFileName, inputFileSizeBytes, outputFileNameWithPath, "");
                 }
             }
             catch
             {
-                await CopyUncompressedFile(file, inputFileName, inputFileSizeBytes, outputFileNameWithPath);
+                await CopyUncompressedFileDueToError(file, inputFileName, inputFileSizeBytes, outputFileNameWithPath);
             }
         }
         #endregion
@@ -296,11 +312,11 @@ namespace CompressPDF
                 }
 
                 // Now that the compression task is completed, it's safe to proceed with the next operation.
-                GetOutputFileCompressionStatusToList(inputFileName, inputFileSizeBytes, outputFileNameWithPathWithExtensionPDF);
+                GetOutputFileCompressionStatusToList(inputFileName, inputFileSizeBytes, outputFileNameWithPathWithExtensionPDF, "");
             }
             catch
             {
-                await CopyUncompressedFile(file, inputFileName, inputFileSizeBytes, outputFileNameWithPath);
+                await CopyUncompressedFileDueToError(file, inputFileName, inputFileSizeBytes, outputFileNameWithPath);
             }
         }
         #endregion
@@ -310,7 +326,7 @@ namespace CompressPDF
         {
             try
             {
-                await CopyUncompressedFile(file, inputFileName, inputFileSizeBytes, outputFileNameWithPath);
+                await CopyUncompressedFileDueToType(file, inputFileName, inputFileSizeBytes, outputFileNameWithPath);
             }
             catch
             {
@@ -319,13 +335,13 @@ namespace CompressPDF
         #endregion
 
         #region Handle Uncompressed File
-        private async Task CopyUncompressedFile(string file, string inputFileName, long inputFileSizeBytes, string outputFileNameWithPath)
+        private async Task CopyUncompressedFileDueToType(string file, string inputFileName, long inputFileSizeBytes, string outputFileNameWithPath)
         {
             // Add a delay in ms
             await Task.Delay(100);
 
             // Update the total file count and size asynchronously
-            totalAmountOfIgnoredFiles++;
+            totalAmountOfIgnoredFilesDueToType++;
 
             // Make a copy of the original file if compression fails asynchronously
             File.Copy(file, outputFileNameWithPath, true);
@@ -334,8 +350,27 @@ namespace CompressPDF
             await Task.Delay(100);
 
             // Get the size of the output file into FileInfoListPDF asynchronously
-            GetOutputFileCompressionStatusToList(inputFileName, inputFileSizeBytes, outputFileNameWithPath);
+            GetOutputFileCompressionStatusToList(inputFileName, inputFileSizeBytes, outputFileNameWithPath, "typu souboru");
         }
+
+        private async Task CopyUncompressedFileDueToError(string file, string inputFileName, long inputFileSizeBytes, string outputFileNameWithPath)
+        {
+            // Add a delay in ms
+            await Task.Delay(100);
+
+            // Update the total file count and size asynchronously
+            totalAmountOfIgnoredFilesDueToErrors++;
+
+            // Make a copy of the original file if compression fails asynchronously
+            File.Copy(file, outputFileNameWithPath, true);
+
+            // Add a delay in ms
+            await Task.Delay(100);
+
+            // Get the size of the output file into FileInfoListPDF asynchronously
+            GetOutputFileCompressionStatusToList(inputFileName, inputFileSizeBytes, outputFileNameWithPath, "chyby");
+        }
+
         #endregion
 
         #region Update UI
@@ -346,7 +381,7 @@ namespace CompressPDF
             string totalOutFileSizeBytesAsString = await Task.Run(() => ConvertBytesToKilobytesOrMegabytes(totalOutFileSizeBytes));
             string totalCompressionRate = await Task.Run(() => CalculateCompressionRate(totalInputFileSizeBytes, totalOutFileSizeBytes).ToString()) + "%";
 
-            StatusReportOfCompressionPDF = ($"Zkomprimováno: {totalAmountOfProcesseFiles}/{totalAmountOfFiles} Velikost z: {totalInputFileSizeBytesAsString} na: {totalOutFileSizeBytesAsString} = {totalCompressionRate} původní velikosti. Nelze komprimovat: {totalAmountOfIgnoredFiles}");
+            StatusReportOfCompressionPDF = ($"Zkomprimováno: {totalAmountOfProcesseFiles}/{totalAmountOfFiles} Velikost z: {totalInputFileSizeBytesAsString} na: {totalOutFileSizeBytesAsString} = {totalCompressionRate} původní velikosti. Nekomprimované soubory kvůli velikosti: {totalAmountOfIgnoredFilesDueToSize}, typu souboru: {totalAmountOfIgnoredFilesDueToType} a kvůli chybě: {totalAmountOfIgnoredFilesDueToErrors} ");
         }
 
         private async Task NotifyFileInfoListPdf()
@@ -363,7 +398,7 @@ namespace CompressPDF
             });
         }
 
-        private void GetOutputFileCompressionStatusToList(string inputFileName, long inputFileSizeBytes, string outputFileNameWithPathWithExtenstionPDF)
+        private void GetOutputFileCompressionStatusToList(string inputFileName, long inputFileSizeBytes, string outputFileNameWithPathWithExtenstionPDF, string fileStatusReportPDF)
         {
             FileInfo outputFileInfo = new FileInfo(outputFileNameWithPathWithExtenstionPDF);
             long outputFileSizeBytes = outputFileInfo.Length;
@@ -376,7 +411,7 @@ namespace CompressPDF
 
             string compressionRate = CalculateCompressionRate(inputFileSizeBytes, outputFileSizeBytes).ToString() + "%";
 
-            FileInfoListPDF.Add(new PDFFileInfo { FileNamePDF = inputFileName, FileOriginalSizePDF = inputFileSizeKB, FileCompressedSizePDF = outputFileSizeKB, FileCompressedRatePDF = compressionRate });
+            FileInfoListPDF.Add(new PDFFileInfo { FileNamePDF = inputFileName, FileOriginalSizePDF = inputFileSizeKB, FileCompressedSizePDF = outputFileSizeKB, FileCompressedRatePDF = compressionRate, FileStatusReportPDF = fileStatusReportPDF });
         }
         #endregion
 

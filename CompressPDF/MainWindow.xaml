@@ -114,6 +114,15 @@
                                 <Binding Path="FileCompressedRatePDF"/>
                             </GridViewColumn.DisplayMemberBinding>
                         </GridViewColumn>
+
+                        <GridViewColumn>
+                            <GridViewColumn.Header>
+                                <TextBlock Text="Nezkomprimováno&#x0a;z důvodu:" MinWidth="100"/>
+                            </GridViewColumn.Header>
+                            <GridViewColumn.DisplayMemberBinding>
+                                <Binding Path="FileStatusReportPDF"/>
+                            </GridViewColumn.DisplayMemberBinding>
+                        </GridViewColumn>
                     </GridView>
                 </ListView.View>
             </ListView>

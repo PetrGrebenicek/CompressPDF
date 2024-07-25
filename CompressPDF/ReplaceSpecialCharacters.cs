@@ -1,4 +1,7 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace CompressPDF
 {
@@ -6,7 +9,6 @@ namespace CompressPDF
     {
         private static readonly Dictionary<string, string> SpecialCharacterMap = new Dictionary<string, string>
         {
-            // Lower case czech characters
             { "á", "a" },
             { "é", "e" },
             { "í", "i" },
@@ -22,7 +24,6 @@ namespace CompressPDF
             { "ť", "t" },
             { "ž", "z" },
             { "ů", "u" },
-            // Upper case czech characters
             { "Á", "A" },
             { "É", "E" },
             { "Í", "I" },
@@ -38,7 +39,6 @@ namespace CompressPDF
             { "Ť", "T" },
             { "Ž", "Z" },
             { "Ů", "U" },
-            // Currency characters
             { "€", "EUR" },
             { "$", "USD" },
             { "£", "GBP" },
@@ -46,7 +46,6 @@ namespace CompressPDF
             { "₫", "VND" },
             { "₿", "BTC" },
             { "₽", "RUB" }
-            // Add more special character mappings as needed
         };
 
         public static string ReplaceSpecialCharacters(string input)
@@ -56,13 +55,29 @@ namespace CompressPDF
                 return input;
             }
 
-            StringBuilder output = new StringBuilder(input);
-            foreach (var pair in SpecialCharacterMap)
+            StringBuilder output = new StringBuilder();
+            foreach (char c in input)
             {
-                output.Replace(pair.Key, pair.Value);
+                string normalizedChar = c.ToString().Normalize(NormalizationForm.FormD);
+                foreach (char nc in normalizedChar)
+                {
+                    UnicodeCategory uc = CharUnicodeInfo.GetUnicodeCategory(nc);
+                    if (uc != UnicodeCategory.NonSpacingMark)
+                    {
+                        string key = nc.ToString();
+                        if (SpecialCharacterMap.TryGetValue(key, out string replacement))
+                        {
+                            output.Append(replacement);
+                        }
+                        else
+                        {
+                            output.Append(nc);
+                        }
+                    }
+                }
             }
 
-            return output.ToString();
+            return output.ToString().Normalize(NormalizationForm.FormC);
         }
     }
 }
