@@ -1,6 +1,11 @@
 ﻿using System.ComponentModel;
 using System.IO;
 using System.Windows;
+using System.Runtime.InteropServices;
+using System.Windows.Input;
+using System.Diagnostics;
+using System.Windows.Controls.Primitives;
+using System.Drawing;
 
 namespace CompressPDF
 {
@@ -24,8 +29,160 @@ namespace CompressPDF
             Left = (screen.Width - Width) / 2;
             Top = 0;
         }
-
         private bool isGrayscaleChecked;
+
+
+
+
+
+
+        #region Resize Window
+        public bool resizeWindowMouseMoveRight;
+        public bool resizeWindowMouseMoveBottom;
+        public bool resizeWindowMouseMoveTop;
+        public bool resizeWindowMouseMoveLeft;
+        public System.Windows.Point resizeWindowMouseClick;
+        public bool isDraggingWindow = false;
+
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (isDraggingWindow == true)
+            {
+                return;
+            }
+            else
+            {
+
+
+            var mousePos = Mouse.GetPosition(this);
+            resizeWindowMouseClick = mousePos;
+
+            // Check if the click is near the edges to enable resizing
+            if (mousePos.X >= this.Width - 15)
+            {
+                resizeWindowMouseMoveRight = true;
+            }
+            else if (mousePos.X <= 2)
+            {
+                resizeWindowMouseMoveLeft = true;
+            }
+            if (mousePos.Y >= this.Height - 15)
+            {
+                resizeWindowMouseMoveBottom = true;
+            }
+            else if (mousePos.Y <= 2)
+            {
+                resizeWindowMouseMoveTop = true;
+            }
+
+            // Capture the mouse to receive events even when the cursor goes outside the window
+            if (resizeWindowMouseMoveRight || resizeWindowMouseMoveBottom ||
+                resizeWindowMouseMoveTop || resizeWindowMouseMoveLeft)
+            {
+                CaptureMouse();
+            }
+            }
+        }
+
+        private void Window_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (resizeWindowMouseMoveRight || resizeWindowMouseMoveBottom ||
+                resizeWindowMouseMoveTop || resizeWindowMouseMoveLeft)
+            {
+                var mousePos = Mouse.GetPosition(this);
+                var screenMousePos = PointToScreen(mousePos);
+
+                if (resizeWindowMouseMoveRight)
+                {
+                    this.Width = Math.Max(MinWidth, screenMousePos.X - this.Left);
+                }
+                if (resizeWindowMouseMoveBottom)
+                {
+                    this.Height = Math.Max(MinHeight, screenMousePos.Y - this.Top);
+                }
+                if (resizeWindowMouseMoveTop)
+                {
+                    var newHeight = Math.Max(MinHeight, this.Height - (mousePos.Y - resizeWindowMouseClick.Y));
+                    this.Height = newHeight;
+                    this.Top = Math.Min(this.Top + (mousePos.Y - resizeWindowMouseClick.Y), this.Top + this.Height - MinHeight);
+                }
+                if (resizeWindowMouseMoveLeft)
+                {
+                    var newWidth = Math.Max(MinWidth, this.Width - (mousePos.X - resizeWindowMouseClick.X));
+                    this.Width = newWidth;
+                    this.Left = Math.Min(this.Left + (mousePos.X - resizeWindowMouseClick.X), this.Left + this.Width - MinWidth);
+                }
+            }
+        }
+
+        private void Window_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            resizeWindowMouseMoveRight = false;
+            resizeWindowMouseMoveBottom = false;
+            resizeWindowMouseMoveTop = false;
+            resizeWindowMouseMoveLeft = false;
+            ReleaseMouseCapture();
+        }
+        #endregion
+
+        #region MoveWindow
+
+
+        private System.Windows.Point startPoint;
+
+        private void GridTopPanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            isDraggingWindow = true;
+            startPoint = e.GetPosition(this);
+            Mouse.Capture(GridTopPanel);
+        }
+
+        private void GridTopPanel_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            isDraggingWindow = false;
+            Mouse.Capture(null); // Release the mouse capture
+        }
+
+        private void GridTopPanel_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isDraggingWindow)
+            {
+                System.Windows.Point currentPoint = e.GetPosition(this);
+                this.Left += currentPoint.X - startPoint.X;
+                this.Top += currentPoint.Y - startPoint.Y;
+            }
+        }
+        #endregion
+
+        private void BtnWindowMinimize_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+
+        }
+
+        private bool windowIsMaximized = false;
+        private void BtnWindowMaximize_Click(object sender, RoutedEventArgs e)
+        {
+            if (windowIsMaximized == false)
+            {
+                this.WindowState = WindowState.Maximized;
+                windowIsMaximized = true;
+                BtnWindowMaximize.Content = "🗗";
+            }
+            else
+            {
+                this.WindowState = WindowState.Normal;
+                windowIsMaximized = false;
+                BtnWindowMaximize.Content = "🗖";
+            }
+        }
+
+        private void BtnWindowClose_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -193,7 +350,7 @@ namespace CompressPDF
                     totalAmountOfFiles++;
                 }
 
-                isGrayscaleChecked = CbGrayscale.IsChecked ?? true;
+                isGrayscaleChecked = CbGrayscale.IsChecked;
                 CbGrayscale.IsEnabled = false;
 
                 foreach (string file in files)
@@ -456,6 +613,11 @@ namespace CompressPDF
 
             licenseWindow.ShowDialog();
         }
+
+
+
         #endregion
+
+
     }
 }

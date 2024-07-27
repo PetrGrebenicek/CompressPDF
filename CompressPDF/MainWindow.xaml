@@ -11,130 +11,170 @@
     Title="Komprimování PDF"
     Height="800" Width="750"
     WindowStartupLocation="Manual"
-    DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    ResizeMode="NoResize"
+    WindowStyle="None"
+    DataContext="{Binding RelativeSource={RelativeSource Self}}"
+    MouseLeftButtonDown="Window_MouseDown"
+    MouseMove="Window_MouseMove"
+    MouseLeftButtonUp="Window_MouseUp">
+    <Border BorderBrush="Black"
+            BorderThickness="1">
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        
-        <Grid Grid.Row="0">
-            <Border BorderBrush="LightGray"
-                    BorderThickness="0,0,0,1"
-                    >
-                <DockPanel>
-                    <CheckBox x:Name="CbGrayscale"
-                 IsChecked="True"
-                 Margin="5"/>
-                    <Label Content="Černobíle"/>
-                    <Button x:Name="BtnAbout"
-                            IsTabStop="False"
-                            Background="White"
-                            Width="100"
-                            Content="Licence"
-                            HorizontalAlignment="Right"
-                            Click="BtnAbout_Click"
-                            Margin="5">
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
-                                    <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                                </Border>
-                            </ControlTemplate>
-                        </Button.Template>
-                    </Button>
-                </DockPanel>
-            </Border>
-        </Grid>
-        
-        <Grid Grid.Row="1">
-            <ListView x:Name="ListViewPDF" BorderThickness="0" 
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="3"/>
+                <RowDefinition Height="27"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0"
+              Background="LightGray"/>
+
+            <Grid Grid.Row="1"
+                  x:Name="GridTopPanel"
+                  MouseLeftButtonDown="GridTopPanel_MouseLeftButtonDown"
+                  MouseLeftButtonUp="GridTopPanel_MouseLeftButtonUp"
+                  MouseMove="GridTopPanel_MouseMove">
+
+                <Border BorderBrush="Black"
+                        Background="LightGray"
+                        BorderThickness="0,0,0,1">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Menu Grid.Column="0" Margin="3,0,0,3">
+                            <MenuItem Width="80" Height="23"
+                                  Header="Menu" Padding="22,0,0,0">
+                                <MenuItem x:Name="CbGrayscale" 
+                                      Header="GrayScale" 
+                                      IsCheckable="True" 
+                                      IsChecked="True"/>
+                                <Separator/>
+                                <MenuItem x:Name="BtnAbout"
+                                      Header="License" 
+                                      Click="BtnAbout_Click"/>
+                            </MenuItem>
+                        </Menu>
+
+                        <DockPanel Grid.Column="1" Margin="0,0,3,3"
+                                   HorizontalAlignment="Right">
+                            <Button x:Name="BtnWindowMinimize"
+                                    Height="23" Width="23" Margin="0,0,3,0"
+                                    Content="🗕"
+                                    Click="BtnWindowMinimize_Click"
+                                    />
+                            <Button x:Name="BtnWindowMaximize"
+                                    Height="23" Width="23" Margin="0,0,3,0"
+                                    Content="🗖"
+                                    Click="BtnWindowMaximize_Click"
+                                    />
+                            <Button x:Name="BtnWindowClose"
+                                    Height="23" Width="23"
+                                    Content="✕"
+                                    Click="BtnWindowClose_Click"
+                                    />
+                        </DockPanel>
+                    </Grid>
+
+
+
+
+
+
+                </Border>
+            </Grid>
+
+            <Grid Grid.Row="2">
+                <ListView x:Name="ListViewPDF" BorderThickness="0" 
             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="IsEnabled" Value="False"/>
-                                <Setter Property="Background" Value="Transparent"/>
-                                <Setter Property="BorderBrush" Value="Transparent"/>
-                                <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource Self}}"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </ListView.ItemContainerStyle>
-                <ListView.Resources>
-                    <Style TargetType="{x:Type GridViewColumnHeader}">
-                        <Setter Property="Background" Value="Transparent"/>
-                        <Setter Property="Foreground" Value="Black"/>
-                        <Setter Property="IsHitTestVisible" Value="False"/>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
-                                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
-                                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"/>
-                                    </Border>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </ListView.Resources>
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn>
-                            <GridViewColumn.Header>
-                                <TextBlock Text="Původní název souboru" MinWidth="400"/>
-                            </GridViewColumn.Header>
-                            <GridViewColumn.DisplayMemberBinding>
-                                <Binding Path="FileNamePDF"/>
-                            </GridViewColumn.DisplayMemberBinding>
-                        </GridViewColumn>
-                        <GridViewColumn>
-                            <GridViewColumn.Header>
-                                <TextBlock Text="Původní&#x0a;velikost" MinWidth="100" TextWrapping="Wrap"/>
-                            </GridViewColumn.Header>
-                            <GridViewColumn.DisplayMemberBinding>
-                                <Binding Path="FileOriginalSizePDF"/>
-                            </GridViewColumn.DisplayMemberBinding>
-                        </GridViewColumn>
-                        <GridViewColumn>
-                            <GridViewColumn.Header>
-                                <TextBlock Text="Komprimovaná&#x0a;velikost" MinWidth="100" TextWrapping="Wrap"/>
-                            </GridViewColumn.Header>
-                            <GridViewColumn.DisplayMemberBinding>
-                                <Binding Path="FileCompressedSizePDF"/>
-                            </GridViewColumn.DisplayMemberBinding>
-                        </GridViewColumn>
-                        <GridViewColumn>
-                            <GridViewColumn.Header>
-                                <TextBlock Text="Komprimovaná&#x0a;velikost v %" MinWidth="100"/>
-                            </GridViewColumn.Header>
-                            <GridViewColumn.DisplayMemberBinding>
-                                <Binding Path="FileCompressedRatePDF"/>
-                            </GridViewColumn.DisplayMemberBinding>
-                        </GridViewColumn>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="IsEnabled" Value="False"/>
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                    <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource Self}}"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.Resources>
+                        <Style TargetType="{x:Type GridViewColumnHeader}">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Foreground" Value="Black"/>
+                            <Setter Property="IsHitTestVisible" Value="False"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+                                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.Resources>
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn>
+                                <GridViewColumn.Header>
+                                    <TextBlock Text="Původní název souboru" MinWidth="400"/>
+                                </GridViewColumn.Header>
+                                <GridViewColumn.DisplayMemberBinding>
+                                    <Binding Path="FileNamePDF"/>
+                                </GridViewColumn.DisplayMemberBinding>
+                            </GridViewColumn>
+                            <GridViewColumn>
+                                <GridViewColumn.Header>
+                                    <TextBlock Text="Původní&#x0a;velikost" MinWidth="100" TextWrapping="Wrap"/>
+                                </GridViewColumn.Header>
+                                <GridViewColumn.DisplayMemberBinding>
+                                    <Binding Path="FileOriginalSizePDF"/>
+                                </GridViewColumn.DisplayMemberBinding>
+                            </GridViewColumn>
+                            <GridViewColumn>
+                                <GridViewColumn.Header>
+                                    <TextBlock Text="Komprimovaná&#x0a;velikost" MinWidth="100" TextWrapping="Wrap"/>
+                                </GridViewColumn.Header>
+                                <GridViewColumn.DisplayMemberBinding>
+                                    <Binding Path="FileCompressedSizePDF"/>
+                                </GridViewColumn.DisplayMemberBinding>
+                            </GridViewColumn>
+                            <GridViewColumn>
+                                <GridViewColumn.Header>
+                                    <TextBlock Text="Komprimovaná&#x0a;velikost v %" MinWidth="100"/>
+                                </GridViewColumn.Header>
+                                <GridViewColumn.DisplayMemberBinding>
+                                    <Binding Path="FileCompressedRatePDF"/>
+                                </GridViewColumn.DisplayMemberBinding>
+                            </GridViewColumn>
 
-                        <GridViewColumn>
-                            <GridViewColumn.Header>
-                                <TextBlock Text="Nezkomprimováno&#x0a;z důvodu:" MinWidth="100"/>
-                            </GridViewColumn.Header>
-                            <GridViewColumn.DisplayMemberBinding>
-                                <Binding Path="FileStatusReportPDF"/>
-                            </GridViewColumn.DisplayMemberBinding>
-                        </GridViewColumn>
-                    </GridView>
-                </ListView.View>
-            </ListView>
-        </Grid>
+                            <GridViewColumn>
+                                <GridViewColumn.Header>
+                                    <TextBlock Text="Nezkomprimováno&#x0a;z důvodu:" MinWidth="100"/>
+                                </GridViewColumn.Header>
+                                <GridViewColumn.DisplayMemberBinding>
+                                    <Binding Path="FileStatusReportPDF"/>
+                                </GridViewColumn.DisplayMemberBinding>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
 
-        <Grid  Grid.Row="2">
-            <Border BorderBrush="LightGray"
+            <Grid  Grid.Row="3">
+                <Border BorderBrush="LightGray"
                     BorderThickness="0,1,0,0">
-                <TextBlock Text="{Binding StatusReportOfCompressionPDF}"
+                    <TextBlock Text="{Binding StatusReportOfCompressionPDF}"
                            Margin="5"/>
-            </Border>
+                </Border>
 
+            </Grid>
         </Grid>
-    </Grid>
+    </Border>
 </Window>

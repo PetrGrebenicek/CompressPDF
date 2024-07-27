@@ -67,7 +67,7 @@
             </Grid>
 
             <Button x:Name="btnOK"
-                Content="OK" 
+                Content="Close" 
                     Click="Button_Click"
                     Grid.Row="1" Grid.Column="1"
                     FontSize="12" 
