@@ -10,6 +10,7 @@
     Drop="DragAndDropArea_Drop"
     Title="Komprimování PDF"
     Height="516" Width="960"
+    MinHeight="115" MinWidth="300"
     WindowStartupLocation="Manual"
     ResizeMode="NoResize"
     WindowStyle="None"
@@ -57,64 +58,60 @@
                       MouseLeftButtonUp="GridTopPanel_MouseLeftButtonUp"
                       MouseMove="GridTopPanel_MouseMove">
 
-                    <Border BorderBrush="Black"
-                            Background="LightGray"
-                            BorderThickness="0,0,0,1">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
+                    <Grid Background="LightGray">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
 
-                            <DockPanel Grid.Column="0" Margin="3,0,0,3">
-                                <Image Source="pdfIcon64x64.png"/>
-                                <TextBlock Text="Compress PDF"
+                        <DockPanel Grid.Column="0" Margin="3,0,0,3">
+                            <Image Source="pdfIcon64x64.png"/>
+                            <TextBlock Text="Compress PDF"
                                            FontWeight="SemiBold"
                                            Margin="3,3,15,0"/>
 
-                                <Menu BorderBrush="#FF707070"
+                            <Menu BorderBrush="#FF707070"
                                       BorderThickness="1"
                                       Cursor="Hand">
-                                    <MenuItem Width="80" Height="23"
+                                <MenuItem Width="80" Height="23"
                                               Header="Menu        &#x25BC;">
-                                        <MenuItem x:Name="CbGrayscale" 
+                                    <MenuItem x:Name="CbGrayscale" 
                                                   Header="GrayScale" 
                                                   IsCheckable="True" 
                                                   IsChecked="True"
                                                   Cursor="Hand"/>
-                                        <Separator/>
-                                        <MenuItem x:Name="BtnAbout"
+                                    <Separator/>
+                                    <MenuItem x:Name="BtnAbout"
                                                   Header="License" 
                                                   Click="BtnAbout_Click"
                                                   Cursor="Hand"/>
-                                    </MenuItem>
-                                </Menu>
+                                </MenuItem>
+                            </Menu>
 
-                            </DockPanel>
+                        </DockPanel>
 
-                            <DockPanel Grid.Column="1" Margin="0,0,3,3"
+                        <DockPanel Grid.Column="1" Margin="0,0,3,3"
                                        HorizontalAlignment="Right">
-                                <Button x:Name="BtnWindowMinimize"
+                            <Button x:Name="BtnWindowMinimize"
                                         Height="23" Width="23" Margin="0,0,3,0"
                                         Content="🗕"
                                         Click="BtnWindowMinimize_Click"
                                         Cursor="Hand"
                                         />
-                                <Button x:Name="BtnWindowMaximize"
+                            <Button x:Name="BtnWindowMaximize"
                                         Height="23" Width="23" Margin="0,0,3,0"
                                         Content="🗖"
                                         Click="BtnWindowMaximize_Click"
                                         Cursor="Hand"
                                         />
-                                <Button x:Name="BtnWindowClose"
+                            <Button x:Name="BtnWindowClose"
                                         Height="23" Width="23"
                                         Content="✕"
                                         Click="BtnWindowClose_Click"
                                         Cursor="Hand"
                                         />
-                            </DockPanel>
-                        </Grid>
-                    </Border>
+                        </DockPanel>
+                    </Grid>
                 </Grid>
 
                 <Grid Grid.Row="0" Grid.Column="2"
