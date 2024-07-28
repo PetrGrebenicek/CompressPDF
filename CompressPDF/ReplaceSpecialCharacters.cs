@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
+﻿using System.Text;
 using System.Globalization;
 
 namespace CompressPDF
@@ -45,7 +43,8 @@ namespace CompressPDF
             { "¥", "JPY" },
             { "₫", "VND" },
             { "₿", "BTC" },
-            { "₽", "RUB" }
+            { "₽", "RUB" },
+            { "%20", " " }
         };
 
         public static string ReplaceSpecialCharacters(string input)

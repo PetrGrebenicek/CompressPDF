@@ -1,11 +1,7 @@
 ﻿using System.ComponentModel;
 using System.IO;
 using System.Windows;
-using System.Runtime.InteropServices;
 using System.Windows.Input;
-using System.Diagnostics;
-using System.Windows.Controls.Primitives;
-using System.Drawing;
 
 namespace CompressPDF
 {
@@ -29,12 +25,8 @@ namespace CompressPDF
             Left = (screen.Width - Width) / 2;
             Top = 0;
         }
+
         private bool isGrayscaleChecked;
-
-
-
-
-
 
         #region Resize Window
         public bool resizeWindowMouseMoveRight;
@@ -125,16 +117,25 @@ namespace CompressPDF
         }
         #endregion
 
-        #region MoveWindow
-
-
+        #region Top panel functions
         private System.Windows.Point startPoint;
 
         private void GridTopPanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            isDraggingWindow = true;
-            startPoint = e.GetPosition(this);
-            Mouse.Capture(GridTopPanel);
+            if (e.ClickCount == 2)
+            {
+                CustomMaximizeWindow();
+            }
+            else if (this.WindowState == WindowState.Maximized)
+            {
+                return;
+            }
+            else
+            {
+                isDraggingWindow = true;
+                startPoint = e.GetPosition(this);
+                Mouse.Capture(GridTopPanel);
+            }
         }
 
         private void GridTopPanel_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -152,7 +153,7 @@ namespace CompressPDF
                 this.Top += currentPoint.Y - startPoint.Y;
             }
         }
-        #endregion
+
 
         private void BtnWindowMinimize_Click(object sender, RoutedEventArgs e)
         {
@@ -162,6 +163,11 @@ namespace CompressPDF
 
         private bool windowIsMaximized = false;
         private void BtnWindowMaximize_Click(object sender, RoutedEventArgs e)
+        {
+            CustomMaximizeWindow();
+        }
+
+        private void CustomMaximizeWindow()
         {
             if (windowIsMaximized == false)
             {
@@ -181,8 +187,7 @@ namespace CompressPDF
         {
             this.Close();
         }
-
-
+        #endregion
 
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
@@ -434,7 +439,7 @@ namespace CompressPDF
                     File.Copy(file, outputFileNameWithPath, true);
                     totalAmountOfIgnoredFilesDueToSize++;
                     await Task.Delay(100);
-                    GetOutputFileCompressionStatusToList(inputFileName, inputFileSizeBytes, outputFileNameWithPath, "velikosti");
+                    GetOutputFileCompressionStatusToList(inputFileName, inputFileSizeBytes, outputFileNameWithPath, "output size");
                 }
                 else
                 {
@@ -507,7 +512,7 @@ namespace CompressPDF
             await Task.Delay(100);
 
             // Get the size of the output file into FileInfoListPDF asynchronously
-            GetOutputFileCompressionStatusToList(inputFileName, inputFileSizeBytes, outputFileNameWithPath, "typu souboru");
+            GetOutputFileCompressionStatusToList(inputFileName, inputFileSizeBytes, outputFileNameWithPath, "file type");
         }
 
         private async Task CopyUncompressedFileDueToError(string file, string inputFileName, long inputFileSizeBytes, string outputFileNameWithPath)
@@ -525,20 +530,19 @@ namespace CompressPDF
             await Task.Delay(100);
 
             // Get the size of the output file into FileInfoListPDF asynchronously
-            GetOutputFileCompressionStatusToList(inputFileName, inputFileSizeBytes, outputFileNameWithPath, "chyby");
+            GetOutputFileCompressionStatusToList(inputFileName, inputFileSizeBytes, outputFileNameWithPath, "error");
         }
 
         #endregion
 
         #region Update UI
-
         private async Task UpdateStatusReport()
         {
             string totalInputFileSizeBytesAsString = await Task.Run(() => ConvertBytesToKilobytesOrMegabytes(totalInputFileSizeBytes));
             string totalOutFileSizeBytesAsString = await Task.Run(() => ConvertBytesToKilobytesOrMegabytes(totalOutFileSizeBytes));
             string totalCompressionRate = await Task.Run(() => CalculateCompressionRate(totalInputFileSizeBytes, totalOutFileSizeBytes).ToString()) + "%";
 
-            StatusReportOfCompressionPDF = ($"Zkomprimováno: {totalAmountOfProcesseFiles}/{totalAmountOfFiles} Velikost z: {totalInputFileSizeBytesAsString} na: {totalOutFileSizeBytesAsString} = {totalCompressionRate} původní velikosti. Nekomprimované soubory kvůli velikosti: {totalAmountOfIgnoredFilesDueToSize}, typu souboru: {totalAmountOfIgnoredFilesDueToType} a kvůli chybě: {totalAmountOfIgnoredFilesDueToErrors} ");
+            StatusReportOfCompressionPDF = ($"Compressed: {totalAmountOfProcesseFiles}/{totalAmountOfFiles}, file size from: {totalInputFileSizeBytesAsString} to: {totalOutFileSizeBytesAsString} = {totalCompressionRate} of original file size. Uncompressed due to output size: {totalAmountOfIgnoredFilesDueToSize}, due to file type: {totalAmountOfIgnoredFilesDueToType}, due to error: {totalAmountOfIgnoredFilesDueToErrors}");
         }
 
         private async Task NotifyFileInfoListPdf()
@@ -617,7 +621,5 @@ namespace CompressPDF
 
 
         #endregion
-
-
     }
 }

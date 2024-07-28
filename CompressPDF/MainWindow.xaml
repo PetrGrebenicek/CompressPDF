@@ -9,7 +9,7 @@
     DragOver="DragAndDropArea_DragOver"
     Drop="DragAndDropArea_Drop"
     Title="Komprimování PDF"
-    Height="800" Width="750"
+    Height="516" Width="960"
     WindowStartupLocation="Manual"
     ResizeMode="NoResize"
     WindowStyle="None"
@@ -46,19 +46,25 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <Menu Grid.Column="0" Margin="3,0,0,3">
-                            <MenuItem Width="80" Height="23"
+                        <DockPanel Grid.Column="0" Margin="3,0,0,3">
+                            <Image Source="pdfIcon64x64.png"/>
+                            <TextBlock Text="Compress PDF"
+                                   FontWeight="SemiBold"
+                                   Margin="3,3,15,0"/>
+                            <Menu >
+                                <MenuItem Width="80" Height="23"
                                   Header="Menu" Padding="22,0,0,0">
-                                <MenuItem x:Name="CbGrayscale" 
+                                    <MenuItem x:Name="CbGrayscale" 
                                       Header="GrayScale" 
                                       IsCheckable="True" 
                                       IsChecked="True"/>
-                                <Separator/>
-                                <MenuItem x:Name="BtnAbout"
+                                    <Separator/>
+                                    <MenuItem x:Name="BtnAbout"
                                       Header="License" 
                                       Click="BtnAbout_Click"/>
-                            </MenuItem>
-                        </Menu>
+                                </MenuItem>
+                            </Menu>
+                        </DockPanel>
 
                         <DockPanel Grid.Column="1" Margin="0,0,3,3"
                                    HorizontalAlignment="Right">
@@ -79,12 +85,6 @@
                                     />
                         </DockPanel>
                     </Grid>
-
-
-
-
-
-
                 </Border>
             </Grid>
 
@@ -123,7 +123,7 @@
                         <GridView>
                             <GridViewColumn>
                                 <GridViewColumn.Header>
-                                    <TextBlock Text="Původní název souboru" MinWidth="400"/>
+                                    <TextBlock Text="Original file name:" Width="400"/>
                                 </GridViewColumn.Header>
                                 <GridViewColumn.DisplayMemberBinding>
                                     <Binding Path="FileNamePDF"/>
@@ -131,7 +131,7 @@
                             </GridViewColumn>
                             <GridViewColumn>
                                 <GridViewColumn.Header>
-                                    <TextBlock Text="Původní&#x0a;velikost" MinWidth="100" TextWrapping="Wrap"/>
+                                    <TextBlock Text="Original&#x0a;file size:" Width="100" TextWrapping="Wrap"/>
                                 </GridViewColumn.Header>
                                 <GridViewColumn.DisplayMemberBinding>
                                     <Binding Path="FileOriginalSizePDF"/>
@@ -139,7 +139,7 @@
                             </GridViewColumn>
                             <GridViewColumn>
                                 <GridViewColumn.Header>
-                                    <TextBlock Text="Komprimovaná&#x0a;velikost" MinWidth="100" TextWrapping="Wrap"/>
+                                    <TextBlock Text="Compressed&#x0a;file size:" Width="100" TextWrapping="Wrap"/>
                                 </GridViewColumn.Header>
                                 <GridViewColumn.DisplayMemberBinding>
                                     <Binding Path="FileCompressedSizePDF"/>
@@ -147,7 +147,7 @@
                             </GridViewColumn>
                             <GridViewColumn>
                                 <GridViewColumn.Header>
-                                    <TextBlock Text="Komprimovaná&#x0a;velikost v %" MinWidth="100"/>
+                                    <TextBlock Text="Compressed&#x0a;file size in %:" Width="100" TextWrapping="Wrap"/>
                                 </GridViewColumn.Header>
                                 <GridViewColumn.DisplayMemberBinding>
                                     <Binding Path="FileCompressedRatePDF"/>
@@ -156,7 +156,7 @@
 
                             <GridViewColumn>
                                 <GridViewColumn.Header>
-                                    <TextBlock Text="Nezkomprimováno&#x0a;z důvodu:" MinWidth="100"/>
+                                    <TextBlock Text="Uncompressed&#x0a;due to:" Width="100" TextWrapping="Wrap"/>
                                 </GridViewColumn.Header>
                                 <GridViewColumn.DisplayMemberBinding>
                                     <Binding Path="FileStatusReportPDF"/>
