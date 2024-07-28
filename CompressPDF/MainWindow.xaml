@@ -22,75 +22,129 @@
 
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="3"/>
-                <RowDefinition Height="27"/>
+                <RowDefinition Height="30"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="26"/>
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0"
-              Background="LightGray"/>
+            <!--#region Top section-->
+            <Grid Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="3"/>
+                    <RowDefinition Height="27"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="3"/>
+                </Grid.ColumnDefinitions>
 
-            <Grid Grid.Row="1"
-                  x:Name="GridTopPanel"
-                  MouseLeftButtonDown="GridTopPanel_MouseLeftButtonDown"
-                  MouseLeftButtonUp="GridTopPanel_MouseLeftButtonUp"
-                  MouseMove="GridTopPanel_MouseMove">
+                <Grid Grid.Row="0" Grid.Column="0"
+                      Background="LightGray"
+                      Cursor="SizeNWSE"/>
 
-                <Border BorderBrush="Black"
-                        Background="LightGray"
-                        BorderThickness="0,0,0,1">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+                <Grid Grid.Row="1" Grid.Column="0"
+                      Background="LightGray"
+                      Cursor="SizeWE"/>
 
-                        <DockPanel Grid.Column="0" Margin="3,0,0,3">
-                            <Image Source="pdfIcon64x64.png"/>
-                            <TextBlock Text="Compress PDF"
-                                   FontWeight="SemiBold"
-                                   Margin="3,3,15,0"/>
-                            <Menu >
-                                <MenuItem Width="80" Height="23"
-                                  Header="Menu" Padding="22,0,0,0">
-                                    <MenuItem x:Name="CbGrayscale" 
-                                      Header="GrayScale" 
-                                      IsCheckable="True" 
-                                      IsChecked="True"/>
-                                    <Separator/>
-                                    <MenuItem x:Name="BtnAbout"
-                                      Header="License" 
-                                      Click="BtnAbout_Click"/>
-                                </MenuItem>
-                            </Menu>
-                        </DockPanel>
+                <Grid Grid.Row="0" Grid.Column="1"
+                      Background="LightGray"
+                      Cursor="SizeNS"/>
 
-                        <DockPanel Grid.Column="1" Margin="0,0,3,3"
-                                   HorizontalAlignment="Right">
-                            <Button x:Name="BtnWindowMinimize"
-                                    Height="23" Width="23" Margin="0,0,3,0"
-                                    Content="🗕"
-                                    Click="BtnWindowMinimize_Click"
-                                    />
-                            <Button x:Name="BtnWindowMaximize"
-                                    Height="23" Width="23" Margin="0,0,3,0"
-                                    Content="🗖"
-                                    Click="BtnWindowMaximize_Click"
-                                    />
-                            <Button x:Name="BtnWindowClose"
-                                    Height="23" Width="23"
-                                    Content="✕"
-                                    Click="BtnWindowClose_Click"
-                                    />
-                        </DockPanel>
-                    </Grid>
-                </Border>
+                <Grid Grid.Row="1" Grid.Column="1"
+                      x:Name="GridTopPanel"
+                      MouseLeftButtonDown="GridTopPanel_MouseLeftButtonDown"
+                      MouseLeftButtonUp="GridTopPanel_MouseLeftButtonUp"
+                      MouseMove="GridTopPanel_MouseMove">
+
+                    <Border BorderBrush="Black"
+                            Background="LightGray"
+                            BorderThickness="0,0,0,1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <DockPanel Grid.Column="0" Margin="3,0,0,3">
+                                <Image Source="pdfIcon64x64.png"/>
+                                <TextBlock Text="Compress PDF"
+                                           FontWeight="SemiBold"
+                                           Margin="3,3,15,0"/>
+
+                                <Menu BorderBrush="#FF707070"
+                                      BorderThickness="1"
+                                      Cursor="Hand">
+                                    <MenuItem Width="80" Height="23"
+                                              Header="Menu        &#x25BC;">
+                                        <MenuItem x:Name="CbGrayscale" 
+                                                  Header="GrayScale" 
+                                                  IsCheckable="True" 
+                                                  IsChecked="True"
+                                                  Cursor="Hand"/>
+                                        <Separator/>
+                                        <MenuItem x:Name="BtnAbout"
+                                                  Header="License" 
+                                                  Click="BtnAbout_Click"
+                                                  Cursor="Hand"/>
+                                    </MenuItem>
+                                </Menu>
+
+                            </DockPanel>
+
+                            <DockPanel Grid.Column="1" Margin="0,0,3,3"
+                                       HorizontalAlignment="Right">
+                                <Button x:Name="BtnWindowMinimize"
+                                        Height="23" Width="23" Margin="0,0,3,0"
+                                        Content="🗕"
+                                        Click="BtnWindowMinimize_Click"
+                                        Cursor="Hand"
+                                        />
+                                <Button x:Name="BtnWindowMaximize"
+                                        Height="23" Width="23" Margin="0,0,3,0"
+                                        Content="🗖"
+                                        Click="BtnWindowMaximize_Click"
+                                        Cursor="Hand"
+                                        />
+                                <Button x:Name="BtnWindowClose"
+                                        Height="23" Width="23"
+                                        Content="✕"
+                                        Click="BtnWindowClose_Click"
+                                        Cursor="Hand"
+                                        />
+                            </DockPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <Grid Grid.Row="0" Grid.Column="2"
+                      Background="LightGray"
+                      Cursor="SizeNESW"/>
+
+                <Grid Grid.Row="1" Grid.Column="2"
+                      Background="LightGray"
+                      Cursor="SizeWE"/>
             </Grid>
+            <!--#endregion-->
 
-            <Grid Grid.Row="2">
-                <ListView x:Name="ListViewPDF" BorderThickness="0" 
-            ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <!--#region Middle section-->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="3"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0"
+                      Background="LightGray"
+                      Cursor="SizeWE"/>
+
+                <ListView x:Name="ListViewPDF"
+                          Grid.Column="1"
+                          BorderThickness="0" 
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          ScrollViewer.VerticalScrollBarVisibility="Visible"
+                          >
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Style.Triggers>
@@ -165,16 +219,57 @@
                         </GridView>
                     </ListView.View>
                 </ListView>
-            </Grid>
 
-            <Grid  Grid.Row="3">
-                <Border BorderBrush="LightGray"
-                    BorderThickness="0,1,0,0">
+                <Grid Grid.Column="2"
+                      Background="LightGray"
+                      Cursor="SizeWE"/>
+            </Grid>
+            <!--#endregion-->
+
+            <!--#region Bottom section-->
+            <Grid Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="3"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="3"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Row="0" Grid.Column="0"
+                      Background="LightGray"
+                      Cursor="SizeWE"/>
+
+                <Grid Grid.Row="2" Grid.Column="0"
+                      Background="LightGray"
+                      Cursor="SizeNESW"/>
+
+
+                <Border Grid.Row="0"
+                        Grid.Column="1"
+                        BorderBrush="LightGray"
+                        BorderThickness="0,1,0,0">
                     <TextBlock Text="{Binding StatusReportOfCompressionPDF}"
-                           Margin="5"/>
+                               Margin="3"/>
                 </Border>
 
+
+                <Grid Grid.Row="1" Grid.Column="1"
+                      Background="LightGray"
+                      Cursor="SizeNS"/>
+
+                <Grid Grid.Row="2" Grid.Column="2"
+                      Background="LightGray"
+                      Cursor="SizeNWSE"/>
+
+                <Grid Grid.Row="0" Grid.Column="2"
+                      Background="LightGray"
+                      Cursor="SizeWE"/>
             </Grid>
+            <!--#endregion-->
+
         </Grid>
     </Border>
 </Window>

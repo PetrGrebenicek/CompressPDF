@@ -2,16 +2,25 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Input;
+using System.Collections.ObjectModel;
 
 namespace CompressPDF
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        public ObservableCollection<PDFFileInfo> FileInfoListPDF { get; set; }
+
+        private bool isGrayscaleChecked;
+
         public MainWindow()
         {
             DataContext = this;
-            FileInfoListPDF = new List<PDFFileInfo>();
-            StatusReportOfCompressionPDF = string.Empty;
+            FileInfoListPDF = new ObservableCollection<PDFFileInfo>();
+            if (ListViewPDF != null)
+            {
+                ListViewPDF.ItemsSource = FileInfoListPDF;
+            }
+
             InitializeComponent();
 
             // Get the screen dimensions
@@ -25,8 +34,6 @@ namespace CompressPDF
             Left = (screen.Width - Width) / 2;
             Top = 0;
         }
-
-        private bool isGrayscaleChecked;
 
         #region Resize Window
         public bool resizeWindowMouseMoveRight;
@@ -44,35 +51,68 @@ namespace CompressPDF
             }
             else
             {
+                var mousePos = Mouse.GetPosition(this);
+                resizeWindowMouseClick = mousePos;
 
+                // Bottom-Right Corner
+                if (mousePos.X >= this.Width - 4 && mousePos.Y >= this.Height - 4)
+                {
+                    resizeWindowMouseMoveRight = true;
+                    resizeWindowMouseMoveBottom = true;
+                    this.Cursor = Cursors.SizeNWSE;
+                }
+                // Bottom-Left Corner
+                else if (mousePos.X <= 3 && mousePos.Y >= this.Height - 4)
+                {
+                    resizeWindowMouseMoveLeft = true;
+                    resizeWindowMouseMoveBottom = true;
+                    this.Cursor = Cursors.SizeNESW;
+                }
+                // Top-Right Corner
+                else if (mousePos.X >= this.Width - 4 && mousePos.Y <= 3)
+                {
+                    resizeWindowMouseMoveRight = true;
+                    resizeWindowMouseMoveTop = true;
+                    this.Cursor = Cursors.SizeNESW;
+                }
+                // Top-Left Corner
+                else if (mousePos.X <= 3 && mousePos.Y <= 3)
+                {
+                    resizeWindowMouseMoveLeft = true;
+                    resizeWindowMouseMoveTop = true;
+                    this.Cursor = Cursors.SizeNWSE;
+                }
+                // Right Edge
+                else if (mousePos.X >= this.Width - 4)
+                {
+                    resizeWindowMouseMoveRight = true;
+                    this.Cursor = Cursors.SizeWE;
+                }
+                // Left Edge
+                else if (mousePos.X <= 3)
+                {
+                    resizeWindowMouseMoveLeft = true;
+                    this.Cursor = Cursors.SizeWE;
+                }
+                // Bottom Edge
+                else if (mousePos.Y >= this.Height - 4)
+                {
+                    resizeWindowMouseMoveBottom = true;
+                    this.Cursor = Cursors.SizeNS;
+                }
+                // Top Edge
+                else if (mousePos.Y <= 3)
+                {
+                    resizeWindowMouseMoveTop = true;
+                    this.Cursor = Cursors.SizeNS;
+                }
 
-            var mousePos = Mouse.GetPosition(this);
-            resizeWindowMouseClick = mousePos;
-
-            // Check if the click is near the edges to enable resizing
-            if (mousePos.X >= this.Width - 15)
-            {
-                resizeWindowMouseMoveRight = true;
-            }
-            else if (mousePos.X <= 2)
-            {
-                resizeWindowMouseMoveLeft = true;
-            }
-            if (mousePos.Y >= this.Height - 15)
-            {
-                resizeWindowMouseMoveBottom = true;
-            }
-            else if (mousePos.Y <= 2)
-            {
-                resizeWindowMouseMoveTop = true;
-            }
-
-            // Capture the mouse to receive events even when the cursor goes outside the window
-            if (resizeWindowMouseMoveRight || resizeWindowMouseMoveBottom ||
-                resizeWindowMouseMoveTop || resizeWindowMouseMoveLeft)
-            {
-                CaptureMouse();
-            }
+                // Capture the mouse to receive events even when the cursor goes outside the window
+                if (resizeWindowMouseMoveRight || resizeWindowMouseMoveBottom ||
+                    resizeWindowMouseMoveTop || resizeWindowMouseMoveLeft)
+                {
+                    CaptureMouse();
+                }
             }
         }
 
@@ -86,23 +126,35 @@ namespace CompressPDF
 
                 if (resizeWindowMouseMoveRight)
                 {
-                    this.Width = Math.Max(MinWidth, screenMousePos.X - this.Left);
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        this.Width = Math.Max(MinWidth, screenMousePos.X - this.Left);
+                    });
                 }
                 if (resizeWindowMouseMoveBottom)
                 {
-                    this.Height = Math.Max(MinHeight, screenMousePos.Y - this.Top);
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        this.Height = Math.Max(MinHeight, screenMousePos.Y - this.Top);
+                    });
                 }
                 if (resizeWindowMouseMoveTop)
                 {
-                    var newHeight = Math.Max(MinHeight, this.Height - (mousePos.Y - resizeWindowMouseClick.Y));
-                    this.Height = newHeight;
-                    this.Top = Math.Min(this.Top + (mousePos.Y - resizeWindowMouseClick.Y), this.Top + this.Height - MinHeight);
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        var newHeight = Math.Max(MinHeight, this.Height - (mousePos.Y - resizeWindowMouseClick.Y));
+                        this.Height = newHeight;
+                        this.Top = Math.Min(this.Top + (mousePos.Y - resizeWindowMouseClick.Y), this.Top + this.Height - MinHeight);
+                    });
                 }
                 if (resizeWindowMouseMoveLeft)
                 {
-                    var newWidth = Math.Max(MinWidth, this.Width - (mousePos.X - resizeWindowMouseClick.X));
-                    this.Width = newWidth;
-                    this.Left = Math.Min(this.Left + (mousePos.X - resizeWindowMouseClick.X), this.Left + this.Width - MinWidth);
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        var newWidth = Math.Max(MinWidth, this.Width - (mousePos.X - resizeWindowMouseClick.X));
+                        this.Width = newWidth;
+                        this.Left = Math.Min(this.Left + (mousePos.X - resizeWindowMouseClick.X), this.Left + this.Width - MinWidth);
+                    });
                 }
             }
         }
@@ -114,6 +166,7 @@ namespace CompressPDF
             resizeWindowMouseMoveTop = false;
             resizeWindowMouseMoveLeft = false;
             ReleaseMouseCapture();
+            this.Cursor = Cursors.Arrow;
         }
         #endregion
 
@@ -135,13 +188,15 @@ namespace CompressPDF
                 isDraggingWindow = true;
                 startPoint = e.GetPosition(this);
                 Mouse.Capture(GridTopPanel);
+                this.Cursor = Cursors.SizeAll;
             }
         }
 
         private void GridTopPanel_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             isDraggingWindow = false;
-            Mouse.Capture(null); // Release the mouse capture
+            Mouse.Capture(null);
+            this.Cursor = Cursors.Arrow;
         }
 
         private void GridTopPanel_MouseMove(object sender, MouseEventArgs e)
@@ -209,17 +264,6 @@ namespace CompressPDF
         protected void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private List<PDFFileInfo> fileInfoListPDF;
-        public List<PDFFileInfo> FileInfoListPDF
-        {
-            get { return fileInfoListPDF; }
-            set
-            {
-                fileInfoListPDF = value;
-                OnPropertyChanged(nameof(FileInfoListPDF));
-            }
         }
 
         public class PDFFileInfo : INotifyPropertyChanged
@@ -542,20 +586,30 @@ namespace CompressPDF
             string totalOutFileSizeBytesAsString = await Task.Run(() => ConvertBytesToKilobytesOrMegabytes(totalOutFileSizeBytes));
             string totalCompressionRate = await Task.Run(() => CalculateCompressionRate(totalInputFileSizeBytes, totalOutFileSizeBytes).ToString()) + "%";
 
-            StatusReportOfCompressionPDF = ($"Compressed: {totalAmountOfProcesseFiles}/{totalAmountOfFiles}, file size from: {totalInputFileSizeBytesAsString} to: {totalOutFileSizeBytesAsString} = {totalCompressionRate} of original file size. Uncompressed due to output size: {totalAmountOfIgnoredFilesDueToSize}, due to file type: {totalAmountOfIgnoredFilesDueToType}, due to error: {totalAmountOfIgnoredFilesDueToErrors}");
+            string statusReport = $"Compressed: {totalAmountOfProcesseFiles}/{totalAmountOfFiles}, file size from: {totalInputFileSizeBytesAsString} to: {totalOutFileSizeBytesAsString} = {totalCompressionRate} of original file size. Uncompressed due to output size: {totalAmountOfIgnoredFilesDueToSize}, due to file type: {totalAmountOfIgnoredFilesDueToType}, due to error: {totalAmountOfIgnoredFilesDueToErrors}";
+
+            await Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+                StatusReportOfCompressionPDF = statusReport;
+            });
         }
 
         private async Task NotifyFileInfoListPdf()
         {
             await Application.Current.Dispatcher.InvokeAsync(() =>
             {
-                OnPropertyChanged(nameof(FileInfoListPDF));
+                if (FileInfoListPDF != null)
+                {
+                    ListViewPDF.ItemsSource = FileInfoListPDF;
+                }
             });
+        }
 
-            await Application.Current.Dispatcher.InvokeAsync(() =>
+        public void AddPdfFile(PDFFileInfo pdfFile)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                ListViewPDF.ItemsSource = null;
-                ListViewPDF.ItemsSource = FileInfoListPDF;
+                FileInfoListPDF.Add(pdfFile);
             });
         }
 
@@ -572,7 +626,18 @@ namespace CompressPDF
 
             string compressionRate = CalculateCompressionRate(inputFileSizeBytes, outputFileSizeBytes).ToString() + "%";
 
-            FileInfoListPDF.Add(new PDFFileInfo { FileNamePDF = inputFileName, FileOriginalSizePDF = inputFileSizeKB, FileCompressedSizePDF = outputFileSizeKB, FileCompressedRatePDF = compressionRate, FileStatusReportPDF = fileStatusReportPDF });
+            // Use the Dispatcher to update the ObservableCollection on the UI thread
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                FileInfoListPDF.Add(new PDFFileInfo
+                {
+                    FileNamePDF = inputFileName,
+                    FileOriginalSizePDF = inputFileSizeKB,
+                    FileCompressedSizePDF = outputFileSizeKB,
+                    FileCompressedRatePDF = compressionRate,
+                    FileStatusReportPDF = fileStatusReportPDF
+                });
+            });
         }
         #endregion
 

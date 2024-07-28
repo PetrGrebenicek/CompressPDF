@@ -67,14 +67,15 @@
             </Grid>
 
             <Button x:Name="btnOK"
-                Content="Close" 
-                    Click="Button_Click"
+                    Content="Close" 
                     Grid.Row="1" Grid.Column="1"
                     FontSize="12" 
                     FontWeight="Bold" 
                     Margin="10"
                     Background="white"
-                    BorderBrush="Black">
+                    BorderBrush="Black"
+                    Click="Button_Click"
+                    Cursor="Hand">
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
                         <Border CornerRadius="5" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
