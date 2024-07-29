@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace CompressPDF
 {
@@ -23,16 +24,7 @@ namespace CompressPDF
 
             InitializeComponent();
 
-            // Get the screen dimensions
-            var screen = System.Windows.SystemParameters.WorkArea;
-
-            // Set the window dimensions
-            Width = screen.Width / 2;
-            Height = screen.Height / 2;
-
-            // Position the window in the center on top
-            Left = (screen.Width - Width) / 2;
-            Top = 0;
+            CustomWindowSnapToTop();
         }
 
         #region Resize Window
@@ -175,21 +167,19 @@ namespace CompressPDF
 
         private void GridTopPanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.ClickCount == 2)
-            {
-                CustomMaximizeWindow();
-            }
-            else if (this.WindowState == WindowState.Maximized)
-            {
-                return;
-            }
-            else
-            {
-                isDraggingWindow = true;
-                startPoint = e.GetPosition(this);
-                Mouse.Capture(GridTopPanel);
-                this.Cursor = Cursors.SizeAll;
-            }
+            isDraggingWindow = true;
+            startPoint = e.GetPosition(this);
+            Mouse.Capture(GridTopPanel);
+            this.Cursor = Cursors.SizeAll;
+        }
+
+        static Point MousePosition()
+        {
+            Point mousePosition = Mouse.GetPosition(Application.Current.MainWindow);
+            Point windowPosition = Application.Current.MainWindow.PointToScreen(new Point(0, 0));
+            Point relativePosition = new Point(mousePosition.X + windowPosition.X, mousePosition.Y + windowPosition.Y);
+
+            return relativePosition;
         }
 
         private void GridTopPanel_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -197,7 +187,145 @@ namespace CompressPDF
             isDraggingWindow = false;
             Mouse.Capture(null);
             this.Cursor = Cursors.Arrow;
+
+            var workAreaScreen = System.Windows.SystemParameters.WorkArea;
+            double wholeScreenHeight = SystemParameters.PrimaryScreenHeight;
+            var taskBarHeight = wholeScreenHeight - workAreaScreen.Height;
+
+
+            // Left Top Corner
+            if (MousePosition().X <= 50 && MousePosition().Y <= 50)
+                CustomWindowSnapToLeftTop();
+
+            // Left Bottom Corner
+            else if (MousePosition().X <= 50 && MousePosition().Y > workAreaScreen.Height - taskBarHeight - 50)
+                CustomWindowSnapToLeftBottom();
+
+            // Left Side
+            else if (MousePosition().X <= 50)
+                CustomWindowSnapToLeft();
+
+            // Right Top Border
+            if (MousePosition().X >= SystemParameters.VirtualScreenWidth - 50 && MousePosition().Y <= 50)
+                CustomWindowSnapToRightTop();
+
+            // Right Bottom Corner
+            else if (MousePosition().X >= SystemParameters.VirtualScreenWidth - 50 && MousePosition().Y > workAreaScreen.Height - taskBarHeight - 50)
+                CustomWindowSnapToRightBottom();
+
+            // Right Border
+            else if (MousePosition().X >= SystemParameters.VirtualScreenWidth - 50)
+                CustomWindowSnapToRight();
+
+            // Top
+            else if (MousePosition().Y <= 10)
+                CustomWindowSnapToTop();
+
+            // Bottom
+            else if (MousePosition().Y > workAreaScreen.Height -50)
+                CustomWindowSnapToBottom();
         }
+
+        private void CustomWindowSnapToLeftTop()
+        {
+            var screen = System.Windows.SystemParameters.WorkArea;
+
+            this.Width = screen.Width / 2;
+            this.Height = screen.Height / 2;
+
+            this.Left = 0;
+            this.Top = 0;
+        }
+
+        private void CustomWindowSnapToLeftBottom()
+        {
+            var screen = System.Windows.SystemParameters.WorkArea;
+
+            this.Width = screen.Width / 2;
+            this.Height = screen.Height / 2;
+
+            this.Left = 0;
+            this.Top = screen.Height - Height;
+        }
+
+        private void CustomWindowSnapToLeft()
+        {
+            var screen = System.Windows.SystemParameters.WorkArea;
+
+            this.Width = screen.Width / 2;
+            this.Height = screen.Height;
+
+            this.Top = 0;
+            this.Left = 0;
+        }
+
+        private void CustomWindowSnapToRightTop()
+        {
+            var screen = System.Windows.SystemParameters.WorkArea;
+
+            this.Width = screen.Width / 2;
+            this.Height = screen.Height / 2;
+
+            var virtualScreenWidth = System.Windows.SystemParameters.VirtualScreenWidth;
+            var leftScreenEdge = screen.Left;
+            var windowWidth = this.Width;
+
+            this.Top = 0;
+            this.Left = Math.Max(leftScreenEdge, leftScreenEdge + virtualScreenWidth - windowWidth);
+        }
+
+        private void CustomWindowSnapToRightBottom()
+        {
+            var screen = System.Windows.SystemParameters.WorkArea;
+
+            this.Width = screen.Width / 2;
+            this.Height = screen.Height / 2;
+
+            var virtualScreenWidth = System.Windows.SystemParameters.VirtualScreenWidth;
+            var leftScreenEdge = screen.Left;
+            var windowWidth = this.Width;
+
+            this.Top = screen.Height - Height;
+            this.Left = Math.Max(leftScreenEdge, leftScreenEdge + virtualScreenWidth - windowWidth);
+        }
+
+        private void CustomWindowSnapToRight()
+        {
+            var screen = System.Windows.SystemParameters.WorkArea;
+
+            this.Width = screen.Width / 2;
+            this.Height = screen.Height;
+
+            var virtualScreenWidth = System.Windows.SystemParameters.VirtualScreenWidth;
+            var leftScreenEdge = screen.Left;
+            var windowWidth = this.Width;
+
+            this.Top = 0;
+            this.Left = Math.Max(leftScreenEdge, leftScreenEdge + virtualScreenWidth - windowWidth);
+        }
+        private void CustomWindowSnapToTop()
+        {
+            var screen = System.Windows.SystemParameters.WorkArea;
+
+            this.Width = screen.Width / 2;
+            this.Height = screen.Height / 2;
+
+            this.Left = (screen.Width - Width) / 2;
+            this.Top = 0;
+        }
+
+        private void CustomWindowSnapToBottom()
+        {
+            var screen = System.Windows.SystemParameters.WorkArea;
+
+            this.Width = screen.Width / 2;
+            this.Height = screen.Height / 2;
+
+            this.Left = (screen.Width - Width) / 2;
+            this.Top = screen.Height - Height;
+        }
+
+
 
         private void GridTopPanel_MouseMove(object sender, MouseEventArgs e)
         {
@@ -208,7 +336,6 @@ namespace CompressPDF
                 this.Top += currentPoint.Y - startPoint.Y;
             }
         }
-
 
         private void BtnWindowMinimize_Click(object sender, RoutedEventArgs e)
         {
@@ -685,6 +812,9 @@ namespace CompressPDF
 
 
 
+
+
         #endregion
+
     }
 }
