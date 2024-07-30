@@ -93,13 +93,6 @@
                                               Click="BtnAbout_Click"
                                               Cursor="Hand"
                                               />
-                                <MenuItem x:Name="testDisabled"
-                                              Template="{DynamicResource CustomChildMenuItemTemplate}"
-                                              Header="Disabled" 
-                                              IsCheckable="True"
-                                              IsChecked="True"
-                                              IsEnabled="False"
-                                              />
                             </MenuItem>
                         </Menu>
 
