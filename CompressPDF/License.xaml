@@ -75,7 +75,9 @@
                     Background="white"
                     BorderBrush="Black"
                     Click="Button_Click"
-                    Cursor="Hand">
+                    Cursor="Hand"
+                    TabIndex="0"
+                    >
                 <Button.Template>
                     <ControlTemplate TargetType="Button">
                         <Border CornerRadius="5" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">

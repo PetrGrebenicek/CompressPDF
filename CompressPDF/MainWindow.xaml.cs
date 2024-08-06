@@ -3,15 +3,14 @@ using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 
 namespace CompressPDF
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         public ObservableCollection<PDFFileInfo> FileInfoListPDF { get; set; }
-
         private bool isGrayscaleChecked;
+        private bool isProcessingFiles;
 
         public MainWindow()
         {
@@ -27,6 +26,8 @@ namespace CompressPDF
             CustomWindowSnapToTop();
         }
 
+
+
         #region Resize Window
         public bool resizeWindowMouseMoveRight;
         public bool resizeWindowMouseMoveBottom;
@@ -38,6 +39,10 @@ namespace CompressPDF
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (isDraggingWindow == true)
+            {
+                return;
+            }
+            else if (WindowState == WindowState.Maximized)
             {
                 return;
             }
@@ -167,10 +172,17 @@ namespace CompressPDF
 
         private void GridTopPanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            isDraggingWindow = true;
-            startPoint = e.GetPosition(this);
-            Mouse.Capture(GridTopPanel);
-            this.Cursor = Cursors.SizeAll;
+            if (WindowState == WindowState.Maximized)
+            {
+                    return;
+            }
+            else
+            {
+                isDraggingWindow = true;
+                startPoint = e.GetPosition(this);
+                Mouse.Capture(GridTopPanel);
+                this.Cursor = Cursors.SizeAll;
+            }
         }
 
         static Point MousePosition()
@@ -369,6 +381,30 @@ namespace CompressPDF
         {
             this.Close();
         }
+
+        private void DropDownButton_Click(object sender, RoutedEventArgs e)
+        {
+            CustomDropDown.IsOpen = true;
+        }
+
+        private void BtnGrayscale_Click(object sender, RoutedEventArgs e)
+        {
+            if (isProcessingFiles == false)
+            {
+                if (CbGrayscale.IsChecked == false)
+                {
+                    CbGrayscale.IsChecked = true;
+                }
+                else
+                {
+                    CbGrayscale.IsChecked = false;
+                }
+            }
+            else
+            {
+                return;
+            }
+        }
         #endregion
 
         #region INotifyPropertyChanged
@@ -526,8 +562,9 @@ namespace CompressPDF
                     totalAmountOfFiles++;
                 }
 
-                isGrayscaleChecked = CbGrayscale.IsChecked;
+                isGrayscaleChecked = CbGrayscale.IsChecked ?? true;
                 CbGrayscale.IsEnabled = false;
+                isProcessingFiles = true;
 
                 foreach (string file in files)
                 {
@@ -575,6 +612,7 @@ namespace CompressPDF
                 }
 
                 CbGrayscale.IsEnabled = true;
+                isProcessingFiles = false;
             }
         }
         #endregion       
