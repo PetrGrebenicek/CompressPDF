@@ -1,4 +1,5 @@
 ﻿using ImageMagick;
+using System.Diagnostics;
 using System.IO;
 
 namespace CompressPDF

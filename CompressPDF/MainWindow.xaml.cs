@@ -20,13 +20,10 @@ namespace CompressPDF
             {
                 ListViewPDF.ItemsSource = FileInfoListPDF;
             }
-
             InitializeComponent();
 
             CustomWindowSnapToTop();
         }
-
-
 
         #region Resize Window
         public bool resizeWindowMouseMoveRight;
@@ -853,6 +850,5 @@ namespace CompressPDF
 
 
         #endregion
-
     }
 }

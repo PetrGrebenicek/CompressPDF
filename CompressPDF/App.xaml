@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:CompresPDF"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+        <!-- Custom style for minimize, maximize and close buttons-->
         <ControlTemplate x:Key="CustomButtonTemplateNormal" TargetType="{x:Type ButtonBase}">
             <Border x:Name="border" Background="#FFF0F0F0" BorderBrush="#FF707070" BorderThickness="1" SnapsToDevicePixels="true">
                 <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="Center" Margin="0" RecognizesAccessKey="True" SnapsToDevicePixels="True" VerticalAlignment="Center"/>
@@ -40,14 +41,6 @@
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
-
-        
-
-
-
-
-
-
 
         <!-- Custom Style for the Menu Initiator Button -->
         <Style x:Key="InitiatorButtonStyle" TargetType="Button">
@@ -124,7 +117,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
 
     </Application.Resources>
 </Application>

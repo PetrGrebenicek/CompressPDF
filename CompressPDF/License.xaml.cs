@@ -68,7 +68,6 @@ namespace CompressPDF
             catch
             {
             }
-
             e.Handled = true;
         }
     }

@@ -39,6 +39,7 @@ namespace CompressPDF
                 inputFileStream.CopyTo(fileStream);
             }
 
+            // Define ghostscript arguments for color mode and gryscale mode
             string[] arguments;
 
             if (grayScaleMode == true)
@@ -64,9 +65,6 @@ namespace CompressPDF
                 tempFilePath
                };
             }
-
-            // Define Ghostscript arguments
-
 
             // Initialize Ghostscript with arguments
             result = gsapi_init_with_args(instance, arguments.Length, arguments);

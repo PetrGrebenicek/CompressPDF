@@ -75,7 +75,6 @@ namespace CompressPDF
                     }
                 }
             }
-
             return output.ToString().Normalize(NormalizationForm.FormC);
         }
     }
