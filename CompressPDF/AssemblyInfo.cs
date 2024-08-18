@@ -5,4 +5,4 @@ using System.Windows;
     ResourceDictionaryLocation.None,
     ResourceDictionaryLocation.SourceAssembly
 )]
-[assembly: AssemblyCopyright("Copyright © 2023 Ing. Petr Grebeníèek")]
+[assembly: AssemblyCopyright("Copyright © 2024 Ing. Petr Grebeníèek")]
