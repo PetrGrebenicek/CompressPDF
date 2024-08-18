@@ -10,9 +10,8 @@
     <Platforms>x64</Platforms>
     <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
     <SignAssembly>False</SignAssembly>
-    <!-- Additional properties for single file publication -->
     <PublishSingleFile>true</PublishSingleFile>
-    <SelfContained>true</SelfContained>
+    <SelfContained>false</SelfContained>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <PublishTrimmed>false</PublishTrimmed>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>

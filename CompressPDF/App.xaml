@@ -88,7 +88,7 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <ContentPresenter Grid.Column="0" IsHitTestVisible="False"
+                                <ContentPresenter Grid.Column="0" IsHitTestVisible="False" Margin="2,0,2,0"
                                                   Content="{TemplateBinding Tag}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 <ContentPresenter Grid.Column="1" IsHitTestVisible="False"
                                                   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
