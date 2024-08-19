@@ -8,7 +8,7 @@
     AllowDrop="True"
     DragOver="DragAndDropArea_DragOver"
     Drop="DragAndDropArea_Drop"
-    Title="Komprimování PDF"
+    Title="Compress PDF"
     Height="516" Width="960"
     MinHeight="115" MinWidth="320"
     WindowStartupLocation="Manual"
@@ -63,7 +63,10 @@
                     </Grid.ColumnDefinitions>
 
                     <DockPanel Grid.Column="0" Margin="3,0,0,3">
-                        <Image Source="pdfIcon64x64.png"/>
+                        <Image Source="IconCompressPDF.png"
+                               Height="27"
+                               Width="27"
+                               SnapsToDevicePixels="True"/>
                         <TextBlock Text="Compress PDF"
                                        FontWeight="SemiBold"
                                        Margin="3,3,15,0"

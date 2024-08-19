@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>pdfIcon64x64.ico</ApplicationIcon>
+    <ApplicationIcon>IconCompressPDF.ico</ApplicationIcon>
     <Platforms>x64</Platforms>
     <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
     <SignAssembly>False</SignAssembly>
@@ -26,8 +26,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="pdfIcon64x64.ico" />
-    <None Remove="pdfIcon64x64.png" />
+    <None Remove="IconCompressPDF.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="IconCompressPDF.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,10 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="pdfIcon64x64.ico" />
-    <Resource Include="pdfIcon64x64.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </Resource>
+    <Resource Include="IconCompressPDF.png" />
   </ItemGroup>
 
   <ItemGroup>
