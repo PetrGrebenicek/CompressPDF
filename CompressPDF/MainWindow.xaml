@@ -62,11 +62,13 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <DockPanel Grid.Column="0" Margin="3,0,0,3">
-                        <Image Source="IconCompressPDF.png"
-                               Height="27"
-                               Width="27"
-                               SnapsToDevicePixels="True"/>
+                    <DockPanel Grid.Column="0" Margin="3,0,0,0">
+                        <Image Source="/Image/PdfIcon.png"
+                               Height="24"
+                               Width="24"
+                               VerticalAlignment="Top"
+                               SnapsToDevicePixels="true"
+                               />
                         <TextBlock Text="Compress PDF"
                                        FontWeight="SemiBold"
                                        Margin="3,3,15,0"
@@ -150,7 +152,8 @@
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="4"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="237*"/>
                 <ColumnDefinition Width="4"/>
             </Grid.ColumnDefinitions>
 
@@ -162,7 +165,7 @@
                           Grid.Column="1"
                           BorderThickness="0" 
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                          ScrollViewer.VerticalScrollBarVisibility="Visible"
+                          ScrollViewer.VerticalScrollBarVisibility="Visible" Grid.ColumnSpan="2"
                           >
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
@@ -239,7 +242,7 @@
                 </ListView.View>
             </ListView>
 
-            <Grid Grid.Column="2"
+            <Grid Grid.Column="3"
                       Background="LightGray"
                       Cursor="SizeWE"/>
         </Grid>
