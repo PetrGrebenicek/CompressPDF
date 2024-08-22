@@ -18,6 +18,13 @@
     MouseLeftButtonDown="Window_MouseDown"
     MouseMove="Window_MouseMove"
     MouseLeftButtonUp="Window_MouseUp">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Image/PdfIcon.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -63,12 +70,14 @@
                     </Grid.ColumnDefinitions>
 
                     <DockPanel Grid.Column="0" Margin="3,0,0,0">
-                        <Image Source="/Image/PdfIcon.png"
-                               Height="24"
-                               Width="24"
-                               VerticalAlignment="Top"
-                               SnapsToDevicePixels="true"
+
+                        <Image Source="{StaticResource svg_PdfIcon}" 
+                               Height="24" 
+                               Width="24" 
+                               VerticalAlignment="Top" 
+                               SnapsToDevicePixels="True"
                                />
+
                         <TextBlock Text="Compress PDF"
                                        FontWeight="SemiBold"
                                        Margin="3,3,15,0"
