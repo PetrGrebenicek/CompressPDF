@@ -8,10 +8,13 @@ namespace CompressPDF
 {
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        #region Initialize variables
         public ObservableCollection<PDFFileInfo> FileInfoListPDF { get; set; }
         private bool isGrayscaleChecked;
         private bool isProcessingFiles;
+        #endregion
 
+        #region Constructor
         public MainWindow()
         {
             DataContext = this;
@@ -24,6 +27,7 @@ namespace CompressPDF
 
             CustomWindowSnapToTop();
         }
+        #endregion
 
         #region Resize Window
         public bool resizeWindowMouseMoveRight;
