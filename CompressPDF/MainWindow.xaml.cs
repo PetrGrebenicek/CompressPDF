@@ -17,15 +17,22 @@ namespace CompressPDF
         #region Constructor
         public MainWindow()
         {
-            DataContext = this;
-            FileInfoListPDF = new ObservableCollection<PDFFileInfo>();
-            if (ListViewPDF != null)
+            try
             {
-                ListViewPDF.ItemsSource = FileInfoListPDF;
+                DataContext = this;
+                FileInfoListPDF = new ObservableCollection<PDFFileInfo>();
+                if (ListViewPDF != null)
+                {
+                    ListViewPDF.ItemsSource = FileInfoListPDF;
+                }
+                InitializeComponent();
+                CustomWindowSnapToTop();
             }
-            InitializeComponent();
-
-            CustomWindowSnapToTop();
+            catch (Exception ex)
+            {
+                ErrorHandler.LogAndShowError(ex);
+                throw;
+            }
         }
         #endregion
 
@@ -175,7 +182,7 @@ namespace CompressPDF
         {
             if (WindowState == WindowState.Maximized)
             {
-                    return;
+                return;
             }
             else
             {
@@ -235,7 +242,7 @@ namespace CompressPDF
                 CustomWindowSnapToTop();
 
             // Bottom
-            else if (MousePosition().Y > workAreaScreen.Height -50)
+            else if (MousePosition().Y > workAreaScreen.Height - 50)
                 CustomWindowSnapToBottom();
         }
 
@@ -848,11 +855,6 @@ namespace CompressPDF
 
             licenseWindow.ShowDialog();
         }
-
-
-
-
-
         #endregion
     }
 }
