@@ -67,9 +67,9 @@ namespace CompressPDF
                     if (uc != UnicodeCategory.NonSpacingMark)
                     {
                         string key = nc.ToString();
-                        if (SpecialCharacterMap.TryGetValue(key, out string replacement))
+                        if (SpecialCharacterMap.TryGetValue(key, out string? replacement))
                         {
-                            output.Append(replacement);
+                            output.Append(replacement ?? key);
                         }
                         else
                         {

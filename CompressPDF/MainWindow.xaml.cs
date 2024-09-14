@@ -416,9 +416,13 @@ namespace CompressPDF
         #endregion
 
         #region INotifyPropertyChanged
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
-        private string statusReportOfCompressionPDF;
+        private string statusReportOfCompressionPDF = string.Empty;
         public string StatusReportOfCompressionPDF
         {
             get { return statusReportOfCompressionPDF; }
@@ -432,14 +436,9 @@ namespace CompressPDF
             }
         }
 
-        protected void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
         public class PDFFileInfo : INotifyPropertyChanged
         {
-            private string fileNamePDF;
+            private string fileNamePDF = string.Empty;
             public string FileNamePDF
             {
                 get { return fileNamePDF; }
@@ -453,7 +452,7 @@ namespace CompressPDF
                 }
             }
 
-            private string fileOriginalSizePDF;
+            private string fileOriginalSizePDF = string.Empty;
             public string FileOriginalSizePDF
             {
                 get { return fileOriginalSizePDF; }
@@ -467,7 +466,7 @@ namespace CompressPDF
                 }
             }
 
-            private string fileCompressedSizePDF;
+            private string fileCompressedSizePDF = string.Empty;
             public string FileCompressedSizePDF
             {
                 get { return fileCompressedSizePDF; }
@@ -481,7 +480,7 @@ namespace CompressPDF
                 }
             }
 
-            private string fileCompressedRatePDF;
+            private string fileCompressedRatePDF = string.Empty;
             public string FileCompressedRatePDF
             {
                 get { return fileCompressedRatePDF; }
@@ -495,7 +494,7 @@ namespace CompressPDF
                 }
             }
 
-            private string fileStatusReportPDF;
+            private string fileStatusReportPDF = string.Empty;
             public string FileStatusReportPDF
             {
                 get { return fileStatusReportPDF; }
@@ -509,7 +508,7 @@ namespace CompressPDF
                 }
             }
 
-            public event PropertyChangedEventHandler PropertyChanged;
+            public event PropertyChangedEventHandler? PropertyChanged;
 
             protected void OnPropertyChanged(string propertyName)
             {
@@ -523,18 +522,25 @@ namespace CompressPDF
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                var data = e.Data.GetData(DataFormats.FileDrop) as string[];
-                // Check if any of the dragged items is a directory
-                bool isDirectory = data.Any(d => Directory.Exists(d));
-
-                if (!isDirectory)
+                if (e.Data.GetData(DataFormats.FileDrop) is string[] data)
                 {
-                    // Only files, allow drop
-                    e.Effects = DragDropEffects.Copy;
+                    // Check if any of the dragged items is a directory
+                    bool isDirectory = data.Any(d => Directory.Exists(d));
+
+                    if (!isDirectory)
+                    {
+                        // Only files, allow drop
+                        e.Effects = DragDropEffects.Copy;
+                    }
+                    else
+                    {
+                        // Contains at least one directory, reject drop
+                        e.Effects = DragDropEffects.None;
+                    }
                 }
                 else
                 {
-                    // Contains at least one directory, reject drop
+                    // Data is null, reject drop
                     e.Effects = DragDropEffects.None;
                 }
             }
@@ -583,13 +589,21 @@ namespace CompressPDF
                     totalInputFileSizeBytes += fileInfo.Length;
 
                     // Define the input file properties
-                    string inputFilePath = fileInfo.DirectoryName; // Path to the directory
+                    string? inputFilePath = fileInfo.DirectoryName; // Path to the directory
                     string inputFileName = fileInfo.Name; // Full name with extension
                     string inputFileExtension = fileInfo.Extension;
                     long inputFileSizeBytes = fileInfo.Length;
 
                     // Create the "_compressed" directory if it doesn't exist
-                    string outputDirectoryPath = Path.Combine(inputFilePath, "_compressed");
+                    string outputDirectoryPath;
+                    if (inputFilePath != null)
+                    {
+                        outputDirectoryPath = Path.Combine(inputFilePath, "_compressed");
+                    }
+                    else
+                    {
+                        outputDirectoryPath = "_compressed";
+                    }
                     Directory.CreateDirectory(outputDirectoryPath);
 
                     // Define the output file properties
