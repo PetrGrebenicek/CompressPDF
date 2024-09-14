@@ -3,29 +3,21 @@ using System.IO;
 
 namespace CompressPDF
 {
-    public class GhostscriptHelper
+    public static partial class GhostscriptHelper
     {
-
         // Initializes Ghostscript DLL
-        [DllImport("gsdll64.dll", EntryPoint = "gsapi_new_instance")]
-        private static extern int gsapi_new_instance(out IntPtr pinstance, IntPtr caller_handle);
+        [LibraryImport("gsdll64.dll", EntryPoint = "gsapi_new_instance")]
+        private static partial int gsapi_new_instance(out IntPtr pinstance, IntPtr caller_handle);
 
-        [DllImport("gsdll64.dll", EntryPoint = "gsapi_init_with_args")]
-        private static extern int gsapi_init_with_args(IntPtr instance, int argc, string[] argv);
+        [LibraryImport("gsdll64.dll", EntryPoint = "gsapi_init_with_args")]
+        private static partial int gsapi_init_with_args(IntPtr instance, int argc, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr)] string[] argv);
 
-        [DllImport("gsdll64.dll", EntryPoint = "gsapi_exit")]
-        private static extern int gsapi_exit(IntPtr instance);
+        [LibraryImport("gsdll64.dll", EntryPoint = "gsapi_exit")]
+        private static partial int gsapi_exit(IntPtr instance);
 
-        /// <summary>
-        /// Compresses a file using Ghostscript
-        /// </summary>
-        /// <param name="inputFileStream"></param>
-        /// <param name="outputFileName"></param>
-        /// <exception cref="Exception"></exception>
         public static void CompressFile(MemoryStream inputFileStream, string outputFileName, bool grayScaleMode)
         {
-            IntPtr instance;
-            int result = gsapi_new_instance(out instance, IntPtr.Zero);
+            int result = gsapi_new_instance(out nint instance, IntPtr.Zero);
             if (result != 0)
             {
                 throw new Exception("Error initializing Ghostscript instance");
@@ -33,37 +25,37 @@ namespace CompressPDF
 
             // Save the input stream to a temporary file
             string tempFilePath = Path.GetTempFileName();
-            using (FileStream fileStream = new FileStream(tempFilePath, FileMode.Create))
+            using (FileStream fileStream = new(tempFilePath, FileMode.Create))
             {
                 inputFileStream.Position = 0; // Reset stream position
                 inputFileStream.CopyTo(fileStream);
             }
 
-            // Define ghostscript arguments for color mode and gryscale mode
+            // Define ghostscript arguments for color mode and grayscale mode
             string[] arguments;
 
-            if (grayScaleMode == true)
+            if (grayScaleMode)
             {
-                arguments = new string[] {
-                "-q", "-dNOPAUSE", "-dBATCH", "-dSAFER",
-                "-sDEVICE=pdfwrite",
-                "-dPDFSETTINGS=/ebook",
-                "-sProcessColorModel=DeviceGray",
-                "-sColorConversionStrategy=Gray",
-                $"-sOutputFile={outputFileName}",
-                tempFilePath
-                };
+                arguments = [
+                    "-q", "-dNOPAUSE", "-dBATCH", "-dSAFER",
+                    "-sDEVICE=pdfwrite",
+                    "-dPDFSETTINGS=/ebook",
+                    "-sProcessColorModel=DeviceRGB",
+                    "-sColorConversionStrategy=Gray",
+                    $"-sOutputFile={outputFileName}",
+                    tempFilePath
+                ];
             }
             else
             {
-                arguments = new string[] {
-                "-q", "-dNOPAUSE", "-dBATCH", "-dSAFER",
-                "-sDEVICE=pdfwrite",
-                "-dPDFSETTINGS=/ebook",
-                "-sProcessColorModel=DeviceGray",
-                $"-sOutputFile={outputFileName}",
-                tempFilePath
-               };
+                arguments = [
+                    "-q", "-dNOPAUSE", "-dBATCH", "-dSAFER",
+                    "-sDEVICE=pdfwrite",
+                    "-dPDFSETTINGS=/ebook",
+                    "-sProcessColorModel=DeviceRGB",
+                    $"-sOutputFile={outputFileName}",
+                    tempFilePath
+                ];
             }
 
             // Initialize Ghostscript with arguments
@@ -75,7 +67,11 @@ namespace CompressPDF
             }
 
             // Exit Ghostscript instance to release resources
-            gsapi_exit(instance);
+            result = gsapi_exit(instance);
+            if (result != 0)
+            {
+                throw new Exception("Error exiting Ghostscript instance");
+            }
 
             // Clean up temporary file
             File.Delete(tempFilePath);

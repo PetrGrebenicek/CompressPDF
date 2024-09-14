@@ -5,7 +5,8 @@ namespace CompressPDF
 {
     public class SpecialCharacterConverter
     {
-        private static readonly Dictionary<string, string> SpecialCharacterMap = new Dictionary<string, string>
+        #region SpecialCharacterMap
+        private static readonly Dictionary<string, string> SpecialCharacterMap = new()
         {
             { "á", "a" },
             { "é", "e" },
@@ -46,7 +47,9 @@ namespace CompressPDF
             { "₽", "RUB" },
             { "%20", " " }
         };
+        #endregion
 
+        #region ReplaceSpecialCharacters
         public static string ReplaceSpecialCharacters(string input)
         {
             if (string.IsNullOrEmpty(input))
@@ -54,7 +57,7 @@ namespace CompressPDF
                 return input;
             }
 
-            StringBuilder output = new StringBuilder();
+            StringBuilder output = new();
             foreach (char c in input)
             {
                 string normalizedChar = c.ToString().Normalize(NormalizationForm.FormD);
@@ -77,5 +80,6 @@ namespace CompressPDF
             }
             return output.ToString().Normalize(NormalizationForm.FormC);
         }
+        #endregion
     }
 }

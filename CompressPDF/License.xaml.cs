@@ -58,7 +58,7 @@ namespace CompressPDF
         {
             try
             {
-                System.Diagnostics.ProcessStartInfo psi = new System.Diagnostics.ProcessStartInfo
+                System.Diagnostics.ProcessStartInfo psi = new()
                 {
                     FileName = e.Uri.AbsoluteUri,
                     UseShellExecute = true

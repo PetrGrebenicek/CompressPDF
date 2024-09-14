@@ -20,7 +20,7 @@ namespace CompressPDF
             try
             {
                 DataContext = this;
-                FileInfoListPDF = new ObservableCollection<PDFFileInfo>();
+                FileInfoListPDF = [];
                 if (ListViewPDF != null)
                 {
                     ListViewPDF.ItemsSource = FileInfoListPDF;
@@ -197,7 +197,7 @@ namespace CompressPDF
         {
             Point mousePosition = Mouse.GetPosition(Application.Current.MainWindow);
             Point windowPosition = Application.Current.MainWindow.PointToScreen(new Point(0, 0));
-            Point relativePosition = new Point(mousePosition.X + windowPosition.X, mousePosition.Y + windowPosition.Y);
+            Point relativePosition = new(mousePosition.X + windowPosition.X, mousePosition.Y + windowPosition.Y);
 
             return relativePosition;
         }
@@ -576,7 +576,7 @@ namespace CompressPDF
 
                 foreach (string file in files)
                 {
-                    FileInfo fileInfo = new FileInfo(file);
+                    FileInfo fileInfo = new(file);
 
                     // Update the total file count and size
                     totalAmountOfProcesseFiles++;
@@ -597,13 +597,13 @@ namespace CompressPDF
                     string outputFileNameWithPath = Path.Combine(outputDirectoryPath, outputFileName);
 
                     // Define a list of supported image extensions by ImageMagick
-                    List<string> supportedExtensions = new List<string> { ".jpg", ".jpeg", ".png", ".tiff", ".tif", ".gif", ".bmp", ".webp", ".heic", ".psd" };
+                    List<string> supportedExtensions = [".jpg", ".jpeg", ".png", ".tiff", ".tif", ".gif", ".bmp", ".webp", ".heic", ".psd"];
 
                     if (supportedExtensions.Contains(inputFileExtension.ToLower()))
                     {
                         await Task.Run(() => CompressImage(file, inputFileName, inputFileSizeBytes, outputDirectoryPath, outputFileNameWithPath));
                     }
-                    else if (inputFileExtension.ToLower() == ".pdf")
+                    else if (inputFileExtension.Equals(".pdf", StringComparison.CurrentCultureIgnoreCase))
                     {
                         await Task.Run(() => CompressPdf(file, inputFileName, inputFileSizeBytes, outputFileNameWithPath));
                     }
@@ -631,10 +631,10 @@ namespace CompressPDF
             try
             {
                 // Read the file content into a MemoryStream
-                using (MemoryStream ms = new MemoryStream())
+                using (MemoryStream ms = new())
                 {
                     // Read the file content into a MemoryStream
-                    using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read))
+                    using (FileStream fs = new(file, FileMode.Open, FileAccess.Read))
                     {
                         fs.CopyTo(ms);
 
@@ -648,7 +648,7 @@ namespace CompressPDF
                 }
 
 
-                FileInfo outputFileInfo = new FileInfo(outputFileNameWithPath);
+                FileInfo outputFileInfo = new(outputFileNameWithPath);
                 long outputFileSizeBytes = outputFileInfo.Length;
                 if (CalculateCompressionRate(inputFileSizeBytes, outputFileSizeBytes) >= 100)
                 {
@@ -677,11 +677,8 @@ namespace CompressPDF
             {
                 string outputFileNameWithPathWithExtensionPDF = Path.Combine(outputDirectoryPath, Path.GetFileNameWithoutExtension(outputFileNameWithPath) + ".pdf");
 
-                // Create an instance of ImageToPdfConverter
-                ImageToPdfConverter imageToPdfConverter = new ImageToPdfConverter();
-
                 // Convert the input image to a PDF and get the MemoryStream directly
-                using (MemoryStream pdfMemoryStream = imageToPdfConverter.ConvertImageToPdf(file, 150))
+                using (MemoryStream pdfMemoryStream = ImageToPdfConverter.ConvertImageToPdf(file, 150))
                 {
                     // Ensure the MemoryStream's position is reset to the beginning.
                     pdfMemoryStream.Seek(0, SeekOrigin.Begin);
@@ -788,7 +785,7 @@ namespace CompressPDF
 
         private void GetOutputFileCompressionStatusToList(string inputFileName, long inputFileSizeBytes, string outputFileNameWithPathWithExtenstionPDF, string fileStatusReportPDF)
         {
-            FileInfo outputFileInfo = new FileInfo(outputFileNameWithPathWithExtenstionPDF);
+            FileInfo outputFileInfo = new(outputFileNameWithPathWithExtenstionPDF);
             long outputFileSizeBytes = outputFileInfo.Length;
 
             // Update the total output file size
@@ -847,8 +844,10 @@ namespace CompressPDF
         #region Licensing
         private void BtnAbout_Click(object sender, RoutedEventArgs e)
         {
-            License licenseWindow = new License();
-            licenseWindow.Owner = Application.Current.MainWindow;
+            License licenseWindow = new()
+            {
+                Owner = Application.Current.MainWindow
+            };
 
             licenseWindow.Left = Application.Current.MainWindow.Left + (Application.Current.MainWindow.Width - licenseWindow.Width) / 2;
             licenseWindow.Top = Application.Current.MainWindow.Top + (Application.Current.MainWindow.Height - licenseWindow.Height) / 2;
