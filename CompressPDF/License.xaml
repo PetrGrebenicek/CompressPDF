@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CompressPDF"
         mc:Ignorable="d"
         Title="Licence"
-        Height="350" Width="500"
+        Height="570" Width="500"
         WindowStyle="None"
         ResizeMode="NoResize"
         Background="White"
@@ -14,8 +14,8 @@
     <Border BorderBrush="Black" BorderThickness="1">
         <Grid Margin="10">
             <Grid.RowDefinitions>
-                <RowDefinition Height="7*"/>
-                <RowDefinition Height="1*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="40"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*"/>
@@ -55,6 +55,21 @@
                     </TextBlock>
 
                     <TextBlock TextWrapping="Wrap" FontSize="10" Margin="0,20,0,0">
+                               <Run Text="Copyright (c) 2001-2024 empira Software GmbH, Troisdorf (Cologne Area), Germany"/>
+                               <LineBreak/>
+                               <LineBreak/>
+                               <Run Text="Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:"/>
+                               <LineBreak/>
+                               <Run Text="The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software."/>
+                               <LineBreak/>
+                               <Run Text="THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."/>
+                               <LineBreak/>
+                               <Hyperlink NavigateUri="https://docs.pdfsharp.net/" RequestNavigate="Hyperlink_RequestNavigate">
+                               <Run Text="https://docs.pdfsharp.net/"/>
+                               </Hyperlink>
+                    </TextBlock>
+
+                    <TextBlock TextWrapping="Wrap" FontSize="10" Margin="0,20,0,0">
                                <Run Text="Copyright © 2024 Ing. Petr Grebeníček"/>
                                <LineBreak/>
                                <Run Text="In compliance with the AGPL license, the source code of this application is available at:"/>
@@ -77,6 +92,8 @@
                     Click="Button_Click"
                     Cursor="Hand"
                     TabIndex="0"
+                    Width="76"
+                    Height="20"
                     >
                 <Button.Template>
                     <ControlTemplate TargetType="Button">

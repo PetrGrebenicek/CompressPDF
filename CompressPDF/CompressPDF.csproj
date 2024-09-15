@@ -31,9 +31,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Magick.NET-Q16-x64" Version="13.9.1">
+    <PackageReference Include="Magick.NET-Q16-x64" Version="14.0.0">
       <ExcludeAssets></ExcludeAssets>
     </PackageReference>
+    <PackageReference Include="PDFsharp" Version="6.1.1" />
   </ItemGroup>
 
   <ItemGroup>

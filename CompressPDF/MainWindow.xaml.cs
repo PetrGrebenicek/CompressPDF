@@ -637,30 +637,33 @@ namespace CompressPDF
                 isProcessingFiles = false;
             }
         }
-        #endregion       
+        #endregion
 
         #region File Compression of PDF
         private async Task CompressPdf(string file, string inputFileName, long inputFileSizeBytes, string outputFileNameWithPath)
         {
             try
             {
-                // Read the file content into a MemoryStream
-                using (MemoryStream ms = new())
-                {
-                    // Read the file content into a MemoryStream
-                    using (FileStream fs = new(file, FileMode.Open, FileAccess.Read))
-                    {
-                        fs.CopyTo(ms);
+                MemoryStream ms = new();
 
-                        // Pass the MemoryStream to the ConvertImageToPdf method
-                        GhostscriptHelper.CompressFile(ms, outputFileNameWithPath, isGrayscaleChecked);
-                        // Dispose of the input file stream after copying
-                        fs.Dispose();
-                    }
-                    // Dispose of the input file stream after copying
-                    ms.Dispose();
+                // Read the file content into a MemoryStream
+                using (FileStream fs = new(file, FileMode.Open, FileAccess.Read))
+                {
+                    fs.CopyTo(ms);
+
+                    // Reset the position of the MemoryStream to the beginning
+                    ms.Position = 0;
                 }
 
+                // Remove the ISDOC image from the MemoryStream
+                MemoryStream modifiedStream = IsdocHelper.Remove(ms);
+
+                // Pass the modified MemoryStream to the CompressFile method
+                GhostscriptHelper.CompressFile(modifiedStream, outputFileNameWithPath, isGrayscaleChecked);
+
+                // Dispose of the memory streams
+                ms.Dispose();
+                modifiedStream.Dispose();
 
                 FileInfo outputFileInfo = new(outputFileNameWithPath);
                 long outputFileSizeBytes = outputFileInfo.Length;

@@ -39,9 +39,15 @@ namespace CompressPDF
                 arguments = [
                     "-q", "-dNOPAUSE", "-dBATCH", "-dSAFER",
                     "-sDEVICE=pdfwrite",
+                    // maximum compression, while maintaining quality
                     "-dPDFSETTINGS=/ebook",
-                    "-sProcessColorModel=DeviceRGB",
+                    "-dCompatibilityLevel=2.0",
+                    "-dDetectDuplicateImages=true",
+                    "-dDoNumCopies",
+                    // color mode
+                    "-sProcessColorModel=DeviceGray",
                     "-sColorConversionStrategy=Gray",
+                    //output file and path
                     $"-sOutputFile={outputFileName}",
                     tempFilePath
                 ];
@@ -51,8 +57,15 @@ namespace CompressPDF
                 arguments = [
                     "-q", "-dNOPAUSE", "-dBATCH", "-dSAFER",
                     "-sDEVICE=pdfwrite",
+                    // maximum compression, while maintaining quality
                     "-dPDFSETTINGS=/ebook",
+                    "-dCompatibilityLevel=2.0",
+                    "-dDetectDuplicateImages=true",
+                    "-dDoNumCopies",
+                    // color mode
                     "-sProcessColorModel=DeviceRGB",
+                    "-sColorConversionStrategy=RGB",
+                    //output file and path
                     $"-sOutputFile={outputFileName}",
                     tempFilePath
                 ];
