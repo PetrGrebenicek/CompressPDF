@@ -11,6 +11,7 @@ namespace CompressPDF
         #region Initialize variables
         public ObservableCollection<PDFFileInfo> FileInfoListPDF { get; set; }
         private bool isGrayscaleChecked;
+        private bool isPreserveFontsChecked;
         private bool isProcessingFiles;
         #endregion
 
@@ -175,7 +176,7 @@ namespace CompressPDF
         }
         #endregion
 
-        #region Top panel functions
+        #region Custom window functions
         private System.Windows.Point startPoint;
 
         private void GridTopPanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -389,7 +390,9 @@ namespace CompressPDF
         {
             this.Close();
         }
+        #endregion
 
+        #region Drop down menu buttons
         private void DropDownButton_Click(object sender, RoutedEventArgs e)
         {
             CustomDropDown.IsOpen = true;
@@ -406,6 +409,25 @@ namespace CompressPDF
                 else
                 {
                     CbGrayscale.IsChecked = false;
+                }
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        private void BtnPreserveFonts_Click(object sender, RoutedEventArgs e)
+        {
+            if (isProcessingFiles == false)
+            {
+                if (CbPrserveFonts.IsChecked == false)
+                {
+                    CbPrserveFonts.IsChecked = true;
+                }
+                else
+                {
+                    CbPrserveFonts.IsChecked = false;
                 }
             }
             else
@@ -577,7 +599,9 @@ namespace CompressPDF
                 }
 
                 isGrayscaleChecked = CbGrayscale.IsChecked ?? true;
+                isPreserveFontsChecked = CbPrserveFonts.IsChecked ?? true;
                 CbGrayscale.IsEnabled = false;
+                CbPrserveFonts.IsEnabled = false;
                 isProcessingFiles = true;
 
                 foreach (string file in files)
@@ -634,6 +658,7 @@ namespace CompressPDF
                 }
 
                 CbGrayscale.IsEnabled = true;
+                CbPrserveFonts.IsEnabled = true;
                 isProcessingFiles = false;
             }
         }
@@ -659,7 +684,7 @@ namespace CompressPDF
                 MemoryStream modifiedStream = IsdocHelper.Remove(ms);
 
                 // Pass the modified MemoryStream to the CompressFile method
-                GhostscriptHelper.CompressFile(modifiedStream, outputFileNameWithPath, isGrayscaleChecked);
+                GhostscriptHelper.CompressFile(modifiedStream, outputFileNameWithPath, isGrayscaleChecked, isPreserveFontsChecked);
 
                 // Dispose of the memory streams
                 ms.Dispose();
@@ -701,7 +726,7 @@ namespace CompressPDF
                     pdfMemoryStream.Seek(0, SeekOrigin.Begin);
 
                     // Await the completion of the file compression task before exiting the using block.
-                    GhostscriptHelper.CompressFile(pdfMemoryStream, outputFileNameWithPathWithExtensionPDF, isGrayscaleChecked);
+                    GhostscriptHelper.CompressFile(pdfMemoryStream, outputFileNameWithPathWithExtensionPDF, isGrayscaleChecked, isPreserveFontsChecked);
                 }
 
                 // Now that the compression task is completed, it's safe to proceed with the next operation.

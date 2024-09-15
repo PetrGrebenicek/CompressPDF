@@ -107,6 +107,18 @@
                                                 <CheckBox x:Name="CbGrayscale" IsChecked="True"/>
                                             </Button.Tag>
                                         </Button>
+                                        
+                                        <Button x:Name="BtnPreserveFonts"
+                                                Content="Preserve fonts"
+                                                Width="100" Height="23"
+                                                Style="{StaticResource CustomDropDownButtonStyle}"
+                                                Cursor="Hand"
+                                                Click="BtnPreserveFonts_Click">
+                                            <Button.Tag>
+                                                <CheckBox x:Name="CbPrserveFonts" IsChecked="False"/>
+                                            </Button.Tag>
+                                        </Button>
+                                        
                                         <Button Content="About"
                                                 Width="100" Height="23"
                                                 Style="{StaticResource CustomDropDownButtonStyle}"

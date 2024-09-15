@@ -15,7 +15,7 @@ namespace CompressPDF
         [LibraryImport("gsdll64.dll", EntryPoint = "gsapi_exit")]
         private static partial int gsapi_exit(IntPtr instance);
 
-        public static void CompressFile(MemoryStream inputFileStream, string outputFileName, bool grayScaleMode)
+        public static void CompressFile(MemoryStream inputFileStream, string outputFileName, bool grayScaleMode, bool preserveFontsMode)
         {
             int result = gsapi_new_instance(out nint instance, IntPtr.Zero);
             if (result != 0)
@@ -32,47 +32,41 @@ namespace CompressPDF
             }
 
             // Define ghostscript arguments for color mode and grayscale mode
-            string[] arguments;
+            List<string> arguments =
+            [
+                "-q", "-dNOPAUSE", "-dBATCH", "-dSAFER",
+                "-sDEVICE=pdfwrite",
+                // maximum compression, while maintaining quality
+                "-dPDFSETTINGS=/ebook",
+                "-dCompatibilityLevel=2.0",
+                "-dDetectDuplicateImages=true",
+                "-dDoNumCopies"
+            ];
 
             if (grayScaleMode)
             {
-                arguments = [
-                    "-q", "-dNOPAUSE", "-dBATCH", "-dSAFER",
-                    "-sDEVICE=pdfwrite",
-                    // maximum compression, while maintaining quality
-                    "-dPDFSETTINGS=/ebook",
-                    "-dCompatibilityLevel=2.0",
-                    "-dDetectDuplicateImages=true",
-                    "-dDoNumCopies",
-                    // color mode
-                    "-sProcessColorModel=DeviceGray",
-                    "-sColorConversionStrategy=Gray",
-                    //output file and path
-                    $"-sOutputFile={outputFileName}",
-                    tempFilePath
-                ];
+                arguments.Add("-sProcessColorModel=DeviceGray");
+                arguments.Add("-sColorConversionStrategy=Gray");
             }
             else
             {
-                arguments = [
-                    "-q", "-dNOPAUSE", "-dBATCH", "-dSAFER",
-                    "-sDEVICE=pdfwrite",
-                    // maximum compression, while maintaining quality
-                    "-dPDFSETTINGS=/ebook",
-                    "-dCompatibilityLevel=2.0",
-                    "-dDetectDuplicateImages=true",
-                    "-dDoNumCopies",
-                    // color mode
-                    "-sProcessColorModel=DeviceRGB",
-                    "-sColorConversionStrategy=RGB",
-                    //output file and path
-                    $"-sOutputFile={outputFileName}",
-                    tempFilePath
-                ];
+                arguments.Add("-sProcessColorModel=DeviceRGB");
+                arguments.Add("-sColorConversionStrategy=RGB");
             }
 
+            if (preserveFontsMode)
+            {
+                arguments.Add("-dNoOutputFonts");
+            }
+
+            arguments.Add($"-sOutputFile={outputFileName}");
+            arguments.Add(tempFilePath);
+
+            // Convert the list back to an array
+            string[] argumentsArray = [.. arguments];
+
             // Initialize Ghostscript with arguments
-            result = gsapi_init_with_args(instance, arguments.Length, arguments);
+            result = gsapi_init_with_args(instance, argumentsArray.Length, argumentsArray);
             if (result != 0)
             {
                 gsapi_exit(instance);
