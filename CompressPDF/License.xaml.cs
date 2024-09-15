@@ -1,20 +1,18 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Interop;
+﻿using System.Windows;
 
 namespace CompressPDF
 {
-    /// <summary>
-    /// Interaction logic for AboutWindow.xaml
-    /// </summary>
     public partial class License : Window
     {
+        #region Constructor
         public License()
         {
             InitializeComponent();
             this.Loaded += License_Loaded;
         }
+        #endregion
 
+        #region AdjustWindowPosition
         private void License_Loaded(object sender, RoutedEventArgs e)
         {
             AdjustWindowPosition();
@@ -48,12 +46,16 @@ namespace CompressPDF
                 this.Top = workingArea.Bottom - windowHeight;
             }
         }
+        #endregion
 
+        #region Buttons
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
+        #endregion
 
+        #region Hyperlink
         private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
             try
@@ -70,5 +72,6 @@ namespace CompressPDF
             }
             e.Handled = true;
         }
+        #endregion
     }
 }

@@ -5,6 +5,7 @@ namespace CompressPDF
 {
     public class ImageToPdfConverter
     {
+        #region Convert Image to PDF
         public static MemoryStream ConvertImageToPdf(string inputImagePath, uint dpi)
         {
             try
@@ -56,5 +57,6 @@ namespace CompressPDF
                 throw new Exception("Error converting image to PDF: " + ex.Message);
             }
         }
+        #endregion
     }
 }

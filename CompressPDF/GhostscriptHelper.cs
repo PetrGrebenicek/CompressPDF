@@ -5,16 +5,18 @@ namespace CompressPDF
 {
     public static partial class GhostscriptHelper
     {
-        // Initializes Ghostscript DLL
+        #region Initializes Ghostscript DLL
         [LibraryImport("gsdll64.dll", EntryPoint = "gsapi_new_instance")]
         private static partial int gsapi_new_instance(out IntPtr pinstance, IntPtr caller_handle);
 
         [LibraryImport("gsdll64.dll", EntryPoint = "gsapi_init_with_args")]
-        private static partial int gsapi_init_with_args(IntPtr instance, int argc, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr)] string[] argv);
+        private static partial int gsapi_init_with_args(IntPtr instance, int argc, [MarshalAs(UnmanagedType.LPArray, ArraySubType = UnmanagedType.LPStr)][In] string[] argv);
 
         [LibraryImport("gsdll64.dll", EntryPoint = "gsapi_exit")]
         private static partial int gsapi_exit(IntPtr instance);
+        #endregion
 
+        #region Compress File
         public static void CompressFile(MemoryStream inputFileStream, string outputFileName, bool grayScaleMode, bool preserveFontsMode)
         {
             int result = gsapi_new_instance(out nint instance, IntPtr.Zero);
@@ -42,7 +44,6 @@ namespace CompressPDF
                 "-dDetectDuplicateImages=true",
                 "-dDoNumCopies"
             ];
-
             if (grayScaleMode)
             {
                 arguments.Add("-sProcessColorModel=DeviceGray");
@@ -53,12 +54,10 @@ namespace CompressPDF
                 arguments.Add("-sProcessColorModel=DeviceRGB");
                 arguments.Add("-sColorConversionStrategy=RGB");
             }
-
             if (preserveFontsMode)
             {
                 arguments.Add("-dNoOutputFonts");
             }
-
             arguments.Add($"-sOutputFile={outputFileName}");
             arguments.Add(tempFilePath);
 
@@ -69,7 +68,8 @@ namespace CompressPDF
             result = gsapi_init_with_args(instance, argumentsArray.Length, argumentsArray);
             if (result != 0)
             {
-                gsapi_exit(instance);
+                // Exit Ghostscript instance to release resources (ignore the result)
+                _ = gsapi_exit(instance);
                 throw new Exception("Error during compression");
             }
 
@@ -89,5 +89,6 @@ namespace CompressPDF
                 throw new Exception("Output file is 0 bytes. Compression may have failed.");
             }
         }
+        #endregion
     }
 }
