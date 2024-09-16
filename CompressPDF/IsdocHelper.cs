@@ -64,7 +64,7 @@ namespace CompressPDF
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Exception: {ex.Message}");
-                // Optionally, rethrow or handle the exception as necessary
+                return inputStream;
             }
 
             return outputStream;
