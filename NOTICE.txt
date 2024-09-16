@@ -25,3 +25,12 @@ under the License.
 Copyright © 2023 Artifex Software Inc.
 This software includes features that are derived from Ghostscript software, under the AGPL license. For the full license text, please see:
 https://www.ghostscript.com/licensing/index.html#open-source
+
+
+
+
+
+Copyright © 2001-2024 empira Software GmbH, Troisdorf (Cologne Area), Germany
+
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+https://docs.pdfsharp.net/
