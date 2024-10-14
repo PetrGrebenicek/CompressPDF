@@ -58,6 +58,8 @@ namespace CompressPDF
             }
 
             StringBuilder output = new();
+
+            // First pass: Replace special characters based on the map
             foreach (char c in input)
             {
                 string normalizedChar = c.ToString().Normalize(NormalizationForm.FormD);
@@ -78,7 +80,22 @@ namespace CompressPDF
                     }
                 }
             }
-            return output.ToString().Normalize(NormalizationForm.FormC);
+
+            string intermediateResult = output.ToString().Normalize(NormalizationForm.FormC);
+
+            // Clear the output StringBuilder for the second pass
+            output.Clear();
+
+            // Second pass: Remove characters not in "a-z", "A-Z", "0-9", " ", "_", "-", "."
+            foreach (char c in intermediateResult)
+            {
+                if (char.IsLetterOrDigit(c) || c == ' ' || c == '_' || c == '-' || c == '.')
+                {
+                    output.Append(c);
+                }
+            }
+
+            return output.ToString();
         }
         #endregion
     }
