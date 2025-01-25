@@ -30,7 +30,7 @@ namespace CompressPDF
                 }
                 InitializeComponent();
                 CustomWindowSnapToTop();
-                Task.Run(async () => await CheckForUpdatesAsync());
+                Dispatcher.BeginInvoke(new Action(async () => await CheckForUpdatesAsync()));
             }
             catch (Exception ex)
             {
