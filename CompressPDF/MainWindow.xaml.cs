@@ -681,7 +681,7 @@ namespace CompressPDF
                 }
 
                 // Remove the ISDOC image from the MemoryStream
-                MemoryStream modifiedStream = IsdocHelper.Remove(ms);
+                MemoryStream modifiedStream = AnnotationHelperClass.Remove(ms);
 
                 // Pass the modified MemoryStream to the CompressFile method
                 GhostscriptHelper.CompressFile(modifiedStream, outputFileNameWithPath, isGrayscaleChecked, isPreserveFontsChecked);

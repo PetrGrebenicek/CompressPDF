@@ -188,18 +188,35 @@
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                           ScrollViewer.VerticalScrollBarVisibility="Visible" Grid.ColumnSpan="2"
                           >
+
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
+                        <Style.Setters>
+                            <Setter Property="Focusable" Value="False"/>
+                            <Setter Property="Foreground" Value="Black"/>
+                        </Style.Setters>
                         <Style.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="IsEnabled" Value="False"/>
                                 <Setter Property="Background" Value="Transparent"/>
                                 <Setter Property="BorderBrush" Value="Transparent"/>
                                 <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource Self}}"/>
                             </Trigger>
+                            <DataTrigger Binding="{Binding FileStatusReportPDF}" Value="error">
+                                <Setter Property="Background" Value="#33FF0000" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding FileStatusReportPDF}" Value="output size">
+                                <Setter Property="Background" Value="#33FDFF00" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding FileStatusReportPDF}" Value="file type">
+                                <Setter Property="Background" Value="#33FDFF00" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding FileStatusReportPDF}" Value="">
+                                <Setter Property="Background" Value="#3300FF00" />
+                            </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </ListView.ItemContainerStyle>
+
                 <ListView.Resources>
                     <Style TargetType="{x:Type GridViewColumnHeader}">
                         <Setter Property="Background" Value="Transparent"/>
