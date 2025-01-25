@@ -15,7 +15,6 @@ namespace CompressPDF
             // This prevents interaction with the owner window
             WindowStartupLocation = WindowStartupLocation.CenterOwner;
             WindowState = WindowState.Normal;
-            Topmost = true;
 
             CurrentVersionTextBlock.Text = $"Current Version: {currentVersion}";
             LatestVersionTextBlock.Text = $"Latest Version: {latestVersion}";
