@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Collections.ObjectModel;
+using System.Net.Http;
 
 namespace CompressPDF
 {
@@ -13,6 +14,7 @@ namespace CompressPDF
         private bool isGrayscaleChecked;
         private bool isPreserveFontsChecked;
         private bool isProcessingFiles;
+        public bool isUpdateAvailable = false;
         #endregion
 
         #region Constructor
@@ -28,6 +30,7 @@ namespace CompressPDF
                 }
                 InitializeComponent();
                 CustomWindowSnapToTop();
+                Task.Run(async () => await CheckForUpdatesAsync());
             }
             catch (Exception ex)
             {
@@ -542,13 +545,20 @@ namespace CompressPDF
         #region Drag&Drop Handling
         private void DragAndDropArea_DragOver(object sender, DragEventArgs e)
         {
+            // Prevent drag and drop if update is available
+            if (isUpdateAvailable)
+            {
+                e.Effects = DragDropEffects.None;
+                e.Handled = true;
+                return;
+            }
+
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 if (e.Data.GetData(DataFormats.FileDrop) is string[] data)
                 {
                     // Check if any of the dragged items is a directory
                     bool isDirectory = data.Any(d => Directory.Exists(d));
-
                     if (!isDirectory)
                     {
                         // Only files, allow drop
@@ -895,6 +905,43 @@ namespace CompressPDF
             licenseWindow.Top = Application.Current.MainWindow.Top + (Application.Current.MainWindow.Height - licenseWindow.Height) / 2;
 
             licenseWindow.ShowDialog();
+        }
+        #endregion
+
+        #region Update
+        private async Task CheckForUpdatesAsync()
+        {
+            try
+            {
+                Version currentVersion = Update.GetCurrentVersion();
+                Version latestVersion;
+
+                try
+                {
+                    latestVersion = await Update.GetLatestReleaseVersion();
+                }
+                catch (HttpRequestException)
+                {
+                    // Silently handle no internet connection
+                    return;
+                }
+                catch (Exception)
+                {
+                    // For any other network-related errors
+                    return;
+                }
+
+                if (Update.IsUpdateAvailable(currentVersion, latestVersion))
+                {
+                    isUpdateAvailable = true;
+                    UpdateWindow updateWindow = new UpdateWindow(this, currentVersion, latestVersion);
+                    updateWindow.ShowDialog();
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorHandler.LogAndShowError(ex);
+            }
         }
         #endregion
     }

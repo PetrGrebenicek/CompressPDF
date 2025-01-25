@@ -1,0 +1,68 @@
+﻿<Window x:Class="CompressPDF.UpdateWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Update Available" 
+        Height="250" 
+        Width="400"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        WindowStyle="SingleBorderWindow">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock 
+            Grid.Row="0" 
+            Text="Update Available" 
+            FontSize="18" 
+            FontWeight="Bold" 
+            Margin="0,0,0,10" 
+            HorizontalAlignment="Center"/>
+
+        <TextBlock 
+            Grid.Row="1" 
+            x:Name="UpdateMessageTextBlock" 
+            Text="A new version of CompressPDF is available." 
+            TextWrapping="Wrap" 
+            Margin="0,0,0,15" 
+            HorizontalAlignment="Center"/>
+
+        <StackPanel 
+            Grid.Row="2" 
+            Orientation="Vertical" 
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Center">
+            <TextBlock 
+                x:Name="CurrentVersionTextBlock" 
+                Text="Current Version: " 
+                Margin="0,5"/>
+            <TextBlock 
+                x:Name="LatestVersionTextBlock" 
+                Text="Latest Version: " 
+                Margin="0,5"/>
+        </StackPanel>
+
+        <Grid Grid.Row="3" Margin="0,15,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button 
+                x:Name="UpdateButton" 
+                Content="Download Update" 
+                Grid.Column="0" 
+                Margin="5,0" 
+                Click="UpdateButton_Click"/>
+            <Button 
+                x:Name="CloseButton" 
+                Content="Close" 
+                Grid.Column="1" 
+                Margin="5,0" 
+                Click="CloseButton_Click"/>
+        </Grid>
+    </Grid>
+</Window>
